@@ -19,7 +19,7 @@
   (helm-other-buffer '(helm-c-source-buffers-list
                        helm-c-source-elscreen
                        helm-c-source-occur
-                       ;;                        helm-c-source-projectile-files-list
+                       helm-c-source-projectile-files-list
                        helm-c-source-ctags
                        helm-c-source-recentf
                        helm-c-source-locate)
