@@ -1,0 +1,46 @@
+MY PROJECTS -*- mode: org; fill-column: 78 -*-
+
+* Tasks
+#+CATEGORY: Tasks
+** TODO Register for class
+** TODO Apply for graduation
+* Sample project milestone
+#+CATEGORY: MilestoneX
+  DEADLINE:
+
+
+
+* School
+#+CATEGORY: School
+** DONE [#A] Contact Dr. Zhang about registration issues
+   SCHEDULED: <2014-12-03 Wed>
+* Work
+#+CATEGORY Work
+** TODO Read METs and KST spreadsheet from Geoffrey
+   SCHEDULED: <2014-12-04 Thu>
+** DONE [#B] Estimate time on assigned issues
+   SCHEDULED: <2014-12-02 Tue>
+** DONE [#B] Check with Jace on JTAB status
+   SCHEDULED: <2014-12-02 Tue>
+* Home
+#+CATEGORY Home
+** TODO [#B] Contact Alice about interview
+* Miscellaneous
+#+CATEGORY: Misc
+** TODO Build 5e druid
+
+
+
+* Anniversaries and Holidays
+#+CATEGORY: Holiday
+%%(org-calendar-holiday)
+%%(diary-date 10 25 t) Grenada's Thanksgiving
+#+CATEGORY: Birthday
+%%(diary-anniversary 9 18 1987) Someone is %d years old
+
+
+
+#+STARTUP: content
+#+STARTUP: lognotestate
+#+SEQ_TODO: TODO STARTED WAITING DELEGATED APPT | DONE DEFERRED CANCELLED
+#+TAGS: { SCHOOL(s) WORK(w) } CALL(c) ERRAND(e)

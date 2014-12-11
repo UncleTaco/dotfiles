@@ -1,0 +1,42 @@
+MY PROJECTS -*- mode: org; fill-column: 78 -*-
+
+* Tasks
+#+CATEGORY: Tasks
+** TODO Change twitter handle
+* Sample project milestone
+#+CATEGORY: MilestoneX
+  DEADLINE:
+
+
+
+* School
+#+CATEGORY: School
+** WAITING [#A] Register for class
+   SCHEDULED: <2014-12-05 Fri>
+** WAITING [#A] Apply for graduation
+   SCHEDULED: <2014-12-05 Fri>
+* Work
+#+CATEGORY Work
+** TODO Read METs and KST spreadsheet from Geoffrey
+   SCHEDULED: <2014-12-04 Thu>
+* Home
+#+CATEGORY Home
+** DONE [#B] Contact Alice about interview
+   SCHEDULED: <2014-12-04 Thu>
+* Miscellaneous
+#+CATEGORY: Misc
+** STARTED Read "In The Name Of the Wind"
+** TODO Review "In The Name Of The Wind"
+* Anniversaries and Holidays
+#+CATEGORY: Holiday
+%%(org-calendar-holiday)
+%%(diary-date 10 25 t) Grenada's Thanksgiving
+#+CATEGORY: Birthday
+%%(diary-anniversary 9 18 1987) Someone is %d years old
+
+
+
+#+STARTUP: content
+#+STARTUP: lognotestate
+#+SEQ_TODO: TODO STARTED WAITING DELEGATED APPT | DONE DEFERRED CANCELLED
+#+TAGS: { SCHOOL(s) WORK(w) } CALL(c) ERRAND(e)
