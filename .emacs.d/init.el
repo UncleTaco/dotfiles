@@ -1,24 +1,35 @@
 (setq package-archives '(("elpa" . "http://tromey.com/elpa/")
 			 ("gnu" . "http://elpa.gnu.org/packages/")
-			 ("marmalade" . "https://marmalade-repo.org/packages/")))
+			 ("marmalade" . "https://marmalade-repo.org/packages/")
+			 ("org" . "http://orgmode.org/elpa/")))
 
-;; activate all the packages
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; Activate all the packages
+(require 'cask "~/.cask/cask.el")
+(cask-initialize)
+(require 'pallet)
+(pallet-mode t)
+
+;; default window width and height
+(defun custom-set-frame-size()
+  (add-to-list 'default-frame-alist '(height . 65))
+  (add-to-list 'default-frame-alist '(width . 99)))
+(custom-set-frame-size)
+(add-hook 'before-make-frame-hook 'custom-set-frame-size)
 
 
 ;; fetch the list of packages available
+(package-initialize)
+(defun require-package (package)
+  (setq-default highlight-tabs t)
+  "Install given PACKAGE."
+  (unless (package-installed-p package)
+    (unless (assoc package package-archive-contents)
+      (package-refresh-contents))
+    (package-install package)))
 
 ;; install the missing packages
-(defun ensure-package-installed (&rest packages)
-  (mapcar
-   (lambda (package)
-     (if (package-installed-p package)
-	 nil
-     (if (y-or-n-p (format "Package %s is missing. Install it? "
-                           package))
-	   (package-install package)
-	 package)))
-   packages))
-(package-initialize)
 (setq user-full-name "Elais Player")
 (setq user-mail-address "elais.player@gmail.com")
 

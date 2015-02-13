@@ -1,0 +1,1 @@
+(define-package "flycheck-dmd-dub" "20140814.1259" "Sets flycheck-dmd-include-paths from dub package information" '((flycheck "0.17")) :url "http://github.com/atilaneves/flycheck-dmd-dub" :keywords '("languages"))

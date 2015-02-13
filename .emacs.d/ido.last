@@ -9,28 +9,30 @@
 
 ;; ----- ido-work-directory-list -----
 (
+ "/Users/elais/.emacs.d/"
  "/Users/elais/.emacs.d/subconfigs/"
  "/Users/elais/Dropbox/org/"
  "/"
  "c:/Users/elais_000/Dropbox/dotfiles/.emacs.d/"
- "/Users/elais/.emacs.d/"
 )
 
 ;; ----- ido-work-file-list -----
 (
+ "init.el"
  "init-org.el"
  "story.org"
  ".OSInstallerMessages"
- "init.el"
  "init-python.el"
  "init-autocomplete.el"
 )
 
 ;; ----- ido-dir-file-cache -----
 (
- ("/Users/elais/.emacs.d/subconfigs/" (21640 58476 0 0) "init-text-edition.el" "init-tags.el" "init-server.el" "init-python.el" "init-programming.el" "init-persistence.el" "init-packages.el" "init-org.el" "init-nonevil-bindings.el" "init-misc-plugins.el" "init-interface.el" "init-i18n.el" "init-helm.el" "init-flycheck.el" "init-evil.el" "init-d.el" "init-colors.el~" "init-colors.el" "init-autocomplete.el" "flycheck_init-colors.el" "#init-org.el#" "../" "./")
+ ("/Users/elais/.emacs.d/subconfigs/" (21725 38649 0 0) "init-text-edition.el" "init-tags.el" "init-server.el" "init-python.el" "init-programming.el" "init-persistence.el" "init-packages.el" "init-org.el" "init-nonevil-bindings.el" "init-misc-plugins.el" "init-interface.el" "init-i18n.el" "init-helm.el" "init-flycheck.el" "init-evil.el" "init-d.el" "init-colors.el~" "init-colors.el" "init-autocomplete.el" "flycheck_init-colors.el" "#init-org.el#" "../" "./")
 
- ("/Users/elais/.emacs.d/" (21641 5956 0 0) "subconfigs/" "server/" "savehist" "recentf" "init.el~" "init.el" "ido.last" "flycheck_init.el" "elpa/" "bookmarks" "backups/" "auto-save-list/" "ac-comphist.dat" "#init.el#" "../" "./")
+ ("/Users/elais/.emacs.d/" (21725 39654 0 0) "subconfigs/" "SessionDesktop.el" "server/" "savehist" "recentf" "init.el~" "init.el" "ido.last" "elpa/" "Cask" "bookmarks" "backups/" "auto-save-list/" "ac-comphist.dat" ".emacs.d" ".cask/" "../" "./")
+
+ ("/Users/elais/" (21725 39721 0 0) "todo.org_archive" "todo.org" "texlive.tlpdb" "Repositories/" "README.md" "Public/" "Projects/" "Pictures/" "novel.org" "notes.org" "Music/" "Movies/" "Library/" "Google Drive/" "Dropbox/" "Downloads/" "Documents/" "Desktop/" "cminstaller/" "Applications (Parallels)/" "Applications/" ".zshrc.pre-oh-my-zsh" ".zshrc-e" ".zshrc" ".zsh_profile" ".zsh_history" ".zsh-update" ".zlogin" ".zcompdump-moushumi-5.0.5" ".zcompdump-moushumi-5.0.2" ".Xauthority" ".vimviews/" ".vimundo/" ".vimswap/" ".vimrc.local" ".vimrc.before" ".vimrc.20140317_1395108735" ".vimrc" ".viminfo" ".vimbackup/" ".vim/" ".Trash/" ".tor/" ".swt/" ".subversion/" ".ssh/" ".spf13-vim-3/" ".saves/" ".rvm/" ".rstudio-desktop/" ".rnd" ".Rhistory" ".R/" ".profile" ".org-jira/" ".oh-my-zsh/" ".neocomplcache/" ".m2/" ".local/" ".lein/" ".jiradev/" ".ipython/" ".gitconfig" ".ghc/" ".gem/" ".emacs.d/" ".DS_Store" ".dropbox/" ".distlib/" ".cups/" ".config/" ".CFUserTextEncoding" ".cask/" ".cache/" ".cabal/" ".bashrc" ".bash_profile" ".bash_history" ".atom/" ".android/" "#novel.org#" "#notes.org#" "../" "./")
 
  ("/Users/elais/Dropbox/org/" (21641 6271 0 0) "work.org" "two.org" "todo.org_archive" "todo.org" "story.org" "school.org" "notes.org" "home.org" "datastructures.org" ".DS_Store" "../" "./")
 
@@ -41,8 +43,6 @@
  ("/Users/elais/Repositories/dotfiles/.emacs.d/" (21640 58437 0 0) "subconfigs/" "server/" "savehist" "recentf" "init.el~" "init.el" "ido.last" "flycheck_init.el" "elpa/" "bookmarks" "backups/" "auto-save-list/" "ac-comphist.dat" "#init.el#" "../" "./")
 
  ("/Users/elais/Repositories/dotfiles/.emacs.d/subconfigs/" (21640 58476 0 0) "init-text-edition.el" "init-tags.el" "init-server.el" "init-python.el" "init-programming.el" "init-persistence.el" "init-packages.el" "init-org.el" "init-nonevil-bindings.el" "init-misc-plugins.el" "init-interface.el" "init-i18n.el" "init-helm.el" "init-flycheck.el" "init-evil.el" "init-d.el" "init-colors.el~" "init-colors.el" "init-autocomplete.el" "flycheck_init-colors.el" "#init-org.el#" "../" "./")
-
- ("/Users/elais/" (21640 58440 0 0) "todo.org_archive" "todo.org" "texlive.tlpdb" "Repositories/" "README.md" "Public/" "Projects/" "Pictures/" "notes.org" "Music/" "Movies/" "Library/" "Google Drive/" "Dropbox/" "Downloads/" "Documents/" "Desktop/" "cminstaller/" "Applications (Parallels)/" "Applications/" ".zshrc.pre-oh-my-zsh" ".zshrc-e" ".zshrc" ".zsh_profile" ".zsh_history" ".zsh-update" ".zlogin" ".zcompdump-moushumi-5.0.5" ".zcompdump-moushumi-5.0.2" ".Xauthority" ".vimviews/" ".vimundo/" ".vimswap/" ".vimrc.local" ".vimrc.before" ".vimrc.20140317_1395108735" ".vimrc" ".viminfo" ".vimbackup/" ".vim/" ".Trash/" ".tor/" ".swt/" ".subversion/" ".spf13-vim-3/" ".saves/" ".rvm/" ".rstudio-desktop/" ".rnd" ".Rhistory" ".R/" ".profile" ".org-jira/" ".oh-my-zsh/" ".neocomplcache/" ".m2/" ".local/" ".lein/" ".jiradev/" ".ipython/" ".gitconfig" ".ghc/" ".gem/" ".emacs.d/" ".DS_Store" ".dropbox/" ".distlib/" ".cups/" ".config/" ".CFUserTextEncoding" ".cache/" ".cabal/" ".bashrc" ".bash_profile" ".bash_history" ".atom/" ".android/" "#todo.org#" "#notes.org#" "../" "./")
 
  ("/Users/elais/Dropbox/" (21632 61345 0 0) "“The Egyptian Revolution”.pdf" "Zozma Shalizi.png" "Yngvi's origin.rtf" "YNAB/" "Tokyo Digital Wallpaper XL/" "Todo Sync/" "TMS.pdf" "tikzpgfmanual.pdf" "The Egyptian Revolution_files/" "The Egyptian Revolution.html" "thatdickred.txt" "Sparrow/" "Slogger/" "Sio.rtf" "shor.py" "Shor's Algorithm in Python.pdf" "Shor's Algorithm in Python.md" "Screenshots/" "Resume/" "ReachCleric.pdf" "Quantum/" "QC Paper.rtf" "QC Paper.md" "PZO9451E.pdf" "PZO9451E 5.pdf" "PZO9451E 4.pdf" "PZO9451E 3.pdf" "PZO9451E 2.pdf" "PZO9446E.pdf" "Public/" "Photos/" "PathfinderPlayerCompanionAdvancedClassOriginsPFRPGPDF.zip" "Pathfinder-sCoreForge-6.15.0.0.xls" "Pathfinder Society/" "org/" "Numenera/" "NIH.zip" "NIH/" "needles-wunsch.png" "mtrn1.txt" "May 7, 2014/" "Malakhar LE Warpriest Cultist of Asmodeus background.docx" "Lucious Leftfoot.md" "loa-jackson-groton-camp-2013.pdf" "LatticeBoys3.py" "Koku.koku/" "kat_fullbody.jpg" "IFTTT/" "Icon
 " "i_tarred_this.tar" "Homo sapiens mitochondrion, complete genome - Nucleotide - NCBI_files/" "Homo sapiens mitochondrion, complete genome - Nucleotide - NCBI.html" "HHS 745 Badge.pdf" "Getting Started.pdf" "Games/" "Gallery/" "fw9.pdf" "Fiasco_Companion/" "FFT explanation.md" "En-us-Belarus.ogg" "ElaisJacksonTranscript.pdf" "Elais Jackson Othello Player Paper.pdf" "Eclipse Phase - Core Rulebook - Official Torrent - 3rd Printing May 2011 (White Space Conflict)/" "DnD/" "Distributed Systems Concepts And Design.Coulouris.5th edition.pdf" "Dawning Star - Operation Quick Launch.pdf" "D&D_3e_character_sheet.xls" "CS620/" "Coursera/" "confluence-cli-3.8.0/" "CMCCData.zip" "Camera Uploads/" "BlueBlazes/" "Bioinformatics%20I%20Fall%202012%20Homework%20Exercises.pages" "Bioinformatics I Fall 2013 Syllabus.doc" "Bioinformatics Homework.zip" "Bioinformatics Homework/" "Bioinformatics/" "Bio Study Guide.rtf" "Bio Study Guide.md" "Bio Study Guide.html" "atlassian-cli-3.8.0-distribution/" "aText/" "Asher's Backstory.rtf" "Apps/" "Andrea.pdf" "Andrea Doria stablock.rtf" "AI Projects and Homework/" "AI Othello Report.pdf" "AI Othello Paper.rtf" "ahill@cis.uab.edu - Previous Tests & Some Study Guides/" "About Downloads.lpdf/" "360245-GameCareerGuid.pdf" "2011 Branavan.pdf" "13Dec05-11-53-26-9902e1f88a_1.png" "1341129480/" "1339636570/" "1338916680/" ".ynabSettings.yroot" ".org-jira/" ".DS_Store" ".dropbox.cache/" ".dropbox" "-+.xlsx" "../" "./")

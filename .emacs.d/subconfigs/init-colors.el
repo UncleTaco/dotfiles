@@ -1,6 +1,6 @@
 ;; My current
     ;; (load-theme 'ample-zen t)
-    (load-theme 'flatui t)
+    (load-theme 'cyberpunk t)
 
 ;; color-theme-aproximate to fix colors in console mode
     (color-theme-approximate-on)
