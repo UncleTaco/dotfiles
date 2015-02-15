@@ -1,4 +1,5 @@
 (require 'org)
+(require 'evil-org)
 
 (if (eq system-type 'windows-nt)
     (setq org-directory "C:/Users/elais_000/Documents/Dropbox/org")
@@ -72,3 +73,8 @@
          "* %?\nEntered on %U\n  %i\n  %a")
         ("s" "Novel" entry (file+headline "~/novel.org" "Tasks")
              "* TODO %?\n  %i\n  %a")))
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t!)" "NEXT(n!)" "|" "DONE(d!)")
+              (sequence "REPEAT(r)" "WAIT(w!)" "|" "PAUSED(p@/!)" "CANCELLED(c@/!)" )
+              (sequence "IDEA(i!)" "MAYBE(y!)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
+             )))

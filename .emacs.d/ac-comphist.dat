@@ -1,56 +1,110 @@
-((("before-make-frame-hook" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("add-hook" .
-   [1 0 0 0 0 0 0 0])
-  ("custom-set-frame-size" .
-   [2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("add-to-list" .
-   [1 0 0 0 0 0 0 0 0 0 0])
-  ("height" .
-   [2 0 0 0 0 0])
-  ("default-frame-alist" .
-   [2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  (":" .
+((("u" .
    [1])
-  ("file+headline" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 1])
-  ("entry" .
-   [1 0 0 0 0])
-  ("provide" .
-   [1 0 0 0 0 0 0])
-  ("require" .
-   [2 0 0 0 0 0 0])
-  ("cask" .
-   [1 0 0 0])
-  ("cask-initialize" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("pallet" .
-   [0 0 0 0 0 1])
-  ("pallet-mode" .
-   [1 0 0 0 0 0 0 0 0 0 0])
-  ("t" .
+  ("k" .
+   [1])
+  ("s" .
+   [1])
+  ("p" .
+   [1])
+  ("P" .
+   [1])
+  ("w" .
+   [1])
+  ("W" .
    [2])
-  ("package-initialize" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0])
-  ("defun" .
-   [2 0 0 0 0])
-  ("require-package" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("setq-default" .
-   [1 0 0 0 0 0 0 0 0 0 0 0])
-  ("highlight-tabs" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("unless" .
-   [2 0 0 0 0 0])
-  ("package-installed-p" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("package" .
-   [3 0 0 0 0 0 0])
-  ("assoc" .
+  ("r" .
+   [1])
+  ("sequence" .
+   [2 0 0 0 0 0 0 0])
+  ("d" .
+   [1])
+  ("quote" .
    [1 0 0 0 0])
-  ("package-archive-contents" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("org-todo-keywords" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("setq" .
+   [1 0 0 0])
+  ("evil-org" .
+   [0 0 0 0 0 0 0 1])
+  ("grandshell" .
+   [1 0 0 0 0 0 0 0 0 0])
+  ("package-install" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
   ("package-refresh-contents" .
    [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("package-install" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])))
+  ("package-archive-contents" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("assoc" .
+   [1 0 0 0 0])
+  ("package" .
+   [3 0 0 0 0 0 0])
+  ("package-installed-p" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("unless" .
+   [2 0 0 0 0 0])
+  ("highlight-tabs" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("setq-default" .
+   [1 0 0 0 0 0 0 0 0 0 0 0])
+  ("require-package" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("defun" .
+   [2 0 0 0 0])
+  ("package-initialize" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0])
+  ("t" .
+   [3])
+  ("pallet-mode" .
+   [1 0 0 0 0 0 0 0 0 0 0])
+  ("pallet" .
+   [0 0 0 0 0 1])
+  ("cask-initialize" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("cask" .
+   [1 0 0 0])
+  ("require" .
+   [3 0 0 0 0 0 0])
+  ("provide" .
+   [1 0 0 0 0 0 0])
+  ("entry" .
+   [1 0 0 0 0])
+  ("file+headline" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 1])
+  (":" .
+   [2])
+  ("default-frame-alist" .
+   [2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("height" .
+   [2 0 0 0 0 0])
+  ("add-to-list" .
+   [1 0 0 0 0 0 0 0 0 0 0])
+  ("custom-set-frame-size" .
+   [2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("add-hook" .
+   [4 0 0 0 0 0 0 0])
+  ("before-make-frame-hook" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("c" .
+   [2])
+  ("set-default-font" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("*" .
+   [1])
+  ("text-mode-hook" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("lambda" .
+   [2 0 0 0 0 0])
+  ("turn" .
+   [2 0 0 0])
+  ("turn-on-auto-" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("fci-mode" .
+   [2 0 0 0 0 0 0 0])
+  ("set-fill-column" .
+   [2 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("org-mode-hook" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("on" .
+   [1 0])
+  ("turn-on-auto-fill" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0])))

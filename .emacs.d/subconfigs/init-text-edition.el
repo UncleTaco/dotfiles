@@ -27,9 +27,15 @@
 
 ;; always turn on auto-fill/word-wrap in text-mode and set
 ;; the fill-column for several languages
+
+    (add-hook 'org-mode-hook (lambda ()
+                           (turn-on-auto-fill)
+                           (fci-mode)
+                           (set-fill-column 79)))
     (add-hook 'text-mode-hook (lambda ()
-                                (turn-on-auto-fill)
-                                (set-fill-column 82)))
+                            (turn-on-auto-fill)
+                            (fci-mode)
+                            (set-fill-column 82)))
     (add-hook 'markdown-mode-hook (lambda ()
                                 (turn-on-auto-fill)
                                 (set-fill-column 82)))
