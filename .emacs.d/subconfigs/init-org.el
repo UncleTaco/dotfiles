@@ -12,19 +12,19 @@
 (if (eq system-type 'darwin)
 	(setq org-directory "~/Dropbox/org")
   (setq org-directory "~/Dropbox/org"))
-
+  
 (setq org-mobile-inbox-for-pull (concat org-directory "/flagged.org"))
 
 (provide 'init-org)
 
 (if (eq system-type 'windows-nt)
 	(setq org-agenda-files (list "C:/Users/elais_000/Dropbox/org/work.org"
-								 "C:/Users/elais_000/Dropbox/org/school.org"
+								 "C:/Users/elais_000/Dropbox/org/school.org" 
 								 "C:/Users/elais_000/Dropbox/org/home.org"))
   (setq org-agenda-files (list "~/Dropbox/org/work.org"
-                               "~/Dropbox/org/school.org"
+                               "~/Dropbox/org/school.org" 
                                "~/Dropbox/org/home.org")))
-
+	 
 (require 'remember)
 
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
@@ -63,13 +63,14 @@
  '(org-remember-templates
    (("t" "Todo" entry (file+headline "~/todo.org" "Tasks")
              "* TODO %?\n  %i\n  %a")))
-
+        
  '(remember-annotation-functions (quote (org-remember-annotation)))
  '(remember-handler-functions (quote (org-remember-handler))))
  (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/todo.org" "Tasks")
              "* TODO %?\n  %i\n  %a")
         ("n" "Notes" entry (file+datetree "~/notes.org")
+<<<<<<< HEAD
          "* %?\nEntered on %U\n  %i\n  %a")
         ("s" "Novel" entry (file+headline "~/novel.org" "Tasks")
              "* TODO %?\n  %i\n  %a")))
@@ -78,3 +79,6 @@
               (sequence "REPEAT(r)" "WAIT(w!)" "|" "PAUSED(p@/!)" "CANCELLED(c@/!)" )
               (sequence "IDEA(i!)" "MAYBE(y!)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
              )))
+=======
+             "* %?\nEntered on %U\n  %i\n  %a")))
+>>>>>>> parent of b516bf0... added logic to save to novel org file

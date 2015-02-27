@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ((("u" .
    [1])
   ("k" .
@@ -108,3 +109,7 @@
    [1 0])
   ("turn-on-auto-fill" .
    [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0])))
+=======
+((("provide" .
+   [1 0 0 0 0 0 0])))
+>>>>>>> parent of b516bf0... added logic to save to novel org file

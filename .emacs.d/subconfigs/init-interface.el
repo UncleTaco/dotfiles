@@ -1,7 +1,7 @@
 ;; no fringes or scrollbars
-;;    (set-fringe-mode -1)
-;;    (scroll-bar-mode -1)
-;;    (tool-bar-mode -1)
+    (set-fringe-mode -1)
+    (scroll-bar-mode -1)
+    (tool-bar-mode -1)
 
 
 ;; start scratch in text mode (usefull to get a faster Emacs load time

@@ -3,10 +3,17 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
+<<<<<<< HEAD
  (filename . "~/Repositories/beautifulMachine/beautifulMachine.org")
  (front-context-string . "*** TODO Epiphan")
  (rear-context-string . "* Ideas\n* Tasks\n")
  (position . 2348))
+=======
+ (filename . "c:/Users/elais_000/Dropbox/org/todo.org")
+ (front-context-string . "** TODO Build 5e")
+ (rear-context-string . "t from Geoffrey\n")
+ (position . 127))
+>>>>>>> parent of b516bf0... added logic to save to novel org file
 ("org-remember-last-stored"
  (filename . "c:/Users/elais_000/Dropbox/org/todo.org")
  (front-context-string . "** TODO Task alp")

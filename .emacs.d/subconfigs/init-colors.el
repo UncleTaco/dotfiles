@@ -1,6 +1,10 @@
 ;; My current
     ;; (load-theme 'ample-zen t)
+<<<<<<< HEAD
     (load-theme 'tronesque t)
+=======
+    (load-theme 'spacegray t)
+>>>>>>> parent of b516bf0... added logic to save to novel org file
 
 ;; color-theme-aproximate to fix colors in console mode
     (color-theme-approximate-on)
