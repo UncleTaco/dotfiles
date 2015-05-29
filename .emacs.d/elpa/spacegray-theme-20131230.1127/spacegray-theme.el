@@ -4,9 +4,9 @@
 
 ;; Author: Bruce Williams <brwcodes@gmail.com>
 ;; Keywords: themes
+;; Package-Version: 20131230.1127
 ;; URL: http://github.com/bruce/emacs-spacegray-theme
-;; Version: 20131230.1127
-;; X-Original-Version: 0.1
+;; Version: 0.1
 ;; Package-Requires: ((emacs "24.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
