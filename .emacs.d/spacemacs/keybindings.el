@@ -57,6 +57,9 @@
 (evil-leader/set-key "of" 'ff-find-other-file)
 (evil-leader/set-key "*y" 'clipboard-kill-region)
 (evil-leader/set-key "*p" 'clipboard-yank)
+(evil-leader/set-key "owm" 'olivetti-mode)
+(evil-leader/set-key "omf" 'hl-sentence-mode)
+(evil-leader/set-key "omv" 'visual-fill-column-mode)
 ;; Universal argument ---------------------------------------------------------
 (evil-leader/set-key "u" 'universal-argument)
 ;; shell command  -------------------------------------------------------------
