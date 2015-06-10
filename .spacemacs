@@ -16,17 +16,22 @@
      ;; Example of useful layers you may want to use right away
      ;; Uncomment a layer name and press C-c C-c to install it
      ;; --------------------------------------------------------
+     auctex
      auto-completion
      better-defaults
-     clojure
+     ;;clojure
      (git :variables
           git-gutter-use-fringe t)
      markdown
      org
+     org-jira
+     osx
+     personal
+     prose
      python
+     spotify
      syntax-checking
      themes-megapack
-     writing
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -69,7 +74,7 @@ before layers configuration."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -134,13 +139,18 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
    )
   ;; User initialization goes here
+  (setq jiralib-url "https://atlasrfid.atlassian.net:443")
+  (remove-hook 'text-mode-hook #'turn-on-auto-fill)
+  (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+  ;; org-mode key bindings ------------------------------------------------------
+
   )
 
 (defun dotspacemacs/config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-)
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

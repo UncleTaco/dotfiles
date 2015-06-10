@@ -1,3 +1,13 @@
+;;; config.el --- Spacemacs Layer configuration File
+;;
+;; Copyright (c) 2012-2014 Sylvain Benner
+;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;;
+;; Author: Sylvain Benner <sylvain.benner@gmail.com>
+;; URL: https://github.com/syl20bnr/spacemacs
+;;
+;; This file is not part of GNU Emacs.
+;;
 ;;; License: GPLv3
 
 ;; ---------------------------------------------------------------------------
@@ -26,11 +36,11 @@
                                        ("kD" .  "lisp-delete-backward")
                                        ("n" .  "narrow/numbers")
                                        ("p" .  "projects")
+                                       ("p$" .  "projects/shell")
                                        ("q" .  "quit")
                                        ("r" .  "registers/rings")
                                        ("s" .  "search/symbol")
                                        ("sw" .  "search-web")
-                                       ("S" .  "spelling")
                                        ("t" .  "toggles")
                                        ("tC" . "toggles-colors")
                                        ("th" . "toggles-highlight")
@@ -49,19 +59,26 @@
 (mapc (lambda (x) (spacemacs/declare-prefix (car x) (cdr x)))
       spacemacs/key-binding-prefixes)
 
-
 ;; ---------------------------------------------------------------------------
 ;; Navigation
 ;; ---------------------------------------------------------------------------
 
 (ido-mode t)
-(setq ido-save-directory-list-file (concat spacemacs-cache-directory "ido.last"))
-;; enable fuzzy matching ido-enable-flex-matching t)
+(setq ido-save-directory-list-file (concat spacemacs-cache-directory "ido.last")
+      ;; enable fuzzy matching
+      ido-enable-flex-matching t)
 ;; Auto refresh buffers
 (global-auto-revert-mode 1)
 ;; Also auto refresh dired, but be quiet about it
 (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
+;; Regexp for useful and useless buffers for smarter buffer switching
+(defvar spacemacs-useless-buffers-regexp '("*\.\+")
+  "Regexp used to determine if a buffer is not useful.")
+(defvar spacemacs-useful-buffers-regexp '("\\*\\(scratch\\|terminal\.\+\\|ansi-term\\|eshell\\)\\*")
+  "Regexp used to define buffers that are useful despite matching
+`spacemacs-useless-buffers-regexp'.")
+
 ;; activate winner mode use to undo and redo windows layout
 (winner-mode t)
 ;; no beep pleeeeeease ! (and no visual blinking too please)
@@ -95,19 +112,26 @@ It runs `tabulated-list-revert-hook', then calls `tabulated-list-print'."
 ;; goto-address-prog-mode only highlights links in strings and comments
 (add-hook 'prog-mode-hook 'goto-address-prog-mode)
 
-;; When point is on paranthesis, highlight the matching one
-(show-paren-mode t)
-
 ;; ---------------------------------------------------------------------------
 ;; Edit
 ;; ---------------------------------------------------------------------------
 
-(spacemacs|defvar-company-backends emacs-lisp-mode)
 ;; start scratch in text mode (usefull to get a faster Emacs load time
 ;; because it avoids autoloads of elisp modes)
 (setq initial-major-mode 'text-mode)
 ;; whitespace-mode
-(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace 1)))
+(defcustom spacemacs-show-trailing-whitespace t
+  "If t, show trailing whitespace."
+  :type 'boolean
+  :group 'spacemacs)
+
+(add-hook 'prog-mode-hook (lambda ()
+                            (when spacemacs-show-trailing-whitespace
+                              (set-face-attribute 'trailing-whitespace nil
+                                                  :background (face-attribute 'font-lock-comment-face
+                                                                              :foreground))
+                              (setq show-trailing-whitespace 1))))
+
 
 ;; use only spaces and no tabs
 (setq-default indent-tabs-mode nil
@@ -140,101 +164,9 @@ Can be installed with `brew install trash'."
 
 ;; Save clipboard contents into kill-ring before replace them
 (setq save-interprogram-paste-before-kill t)
-;; ---------------------------------------------------------------------------
-;; Org-Mode
-;; ---------------------------------------------------------------------------
-;; Org settings
-(setq org-directory "~/Dropbox/org/")
-(setq org-agenda-files '("~/Dropbox/org/gtd/main.org" "~/Dropbox/org/groceries.org"))
-;; The habit package for org is awesome!
-(require 'org-habit)
-;; Ifttt auto appends .txt to filenames for dropbox append to file action
-;;(add-to-list 'auto-mode-alist '("\\Dropbox/org/.*\.txt\\'" . org-mode))
-;; Quick searches in org mode
-(setq org-agenda-custom-commands
-      '(("x" agenda)
-        ("y" agenda*)
-        ("w" todo "WAITING")
-        ("W" todo-tree "WAITING")
-        ("s" todo "STARTED")
-        ("S" todo-tree "STARTED")
-        ("c" tags "+COMPUTER")
-        ("t" tags "+TELEPHONE")
-        ("o" . "WORK tag searches") ; description for "o" prefix
-        ("oo" tags "+WORK")
-        ("op" tags "+WORK+PLANNING")
-        ("om" tags "+WORK+REGRESSION")
-        ("ol" tags "+WORK+LUNCHTIME")
-        ("ot" tags "+WORK+TELEPHONE")
-        ("or" tags "+WORK+RETROSPECTIVE")
-        ("od" tags "+WORK+DAILYSCRUM")
-        ("oa" tags "+WORK+ASAP")
-        ("h" . "HOME tag searches") ; description for "h" prefix
-        ("hf" tags "+HOME+FINANCES")
-        ("hc" tags "+HOME+COMPUTER")
-        ("hp" tags "+HOME+TELEPHONE")
-        ("hk" tags "+HOME+KAT")
-        ("hm" tags "+HOME+MOM")
-        ("A" agenda ""
-         ((org-agenda-skip-function
-           (lambda nil
-             (org-agenda-skip-entry-if (quote notregexp) "\\=.*\\[#A\\]")))
-          (org-agenda-ndays 1)
-          (org-agenda-overriding-header "Today's Priority #A tasks: ")))
-        ("u" alltodo ""
-         ((org-agenda-skip-function
-           (lambda nil
-             (org-agenda-skip-entry-if (quote scheduled) (quote deadline)
-                                       (quote regexp) "\n]+>")))
-          (org-agenda-overriding-header "Unscheduled TODO entries: ")))))
-(custom-set-variables
- '(org-agenda-ndays 7)
- '(org-deadline-warning-days 14)
- '(org-agenda-show-all-dates t)
- '(org-agenda-skip-deadline-if-done t)
- '(org-agenda-skip-scheduled-if-done t)
- '(org-agenda-start-on-weekday nil)
- '(org-reverse-note-order t)
- '(org-fast-tag-selection-single-key (quote expert)))
-;; add novel specific keywords
-(setq org-todo-keywords
-      (quote ((sequence "TODO(t!)" "NEXT(n!)" "|" "DONE(d!)")
-              (sequence "REPEAT(r)" "WAIT(w!)" "|" "PAUSED(p@/!)" "CANCELLED(c@/!)" )
-              (sequence "IDEA(i!)" "MAYBE(y!)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
-              )))
-                                        ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
-(setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                 (org-agenda-files :maxlevel . 9))))
 
-                                        ; Use full outline paths for refile targets - we file directly with IDO
-(setq org-refile-use-outline-path t)
-
-                                        ; Targets complete directly with IDO
-(setq org-outline-path-complete-in-steps nil)
-
-                                        ; Allow refile to create parent tasks with confirmation
-(setq org-refile-allow-creating-parent-nodes (quote confirm))
-
-                                        ; Use IDO for both buffer and file completion and ido-everywhere to t
-(setq org-completion-use-ido t)
-(setq ido-everywhere t)
-(setq ido-max-directory-size 100000)
-(ido-mode (quote both))
-
-                                        ; Use the current window when visiting files and buffers with ido
-(setq ido-default-file-method 'selected-window)
-(setq ido-default-buffer-method 'selected-window)
-
-                                        ; Use the current window for indirect buffer display
-(setq org-indirect-buffer-display 'current-window)
-
-;;;; Refile settings
-                                        ; Exclude DONE state tasks from refile targets
-(defun bh/verify-refile-target ()
-  "Exclude todo keywords with a done state from refile targets"
-  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
-
-(setq org-refile-target-verify-function 'bh/verify-refile-target)
+;; Single space between sentencs is more widespread than double
+(setq-default sentence-end-double-space nil)
 
 ;; ---------------------------------------------------------------------------
 ;; UI
