@@ -19,7 +19,8 @@
      auctex
      auto-completion
      better-defaults
-     ;;clojure
+     clojure
+     emacs-lisp
      (git :variables
           git-gutter-use-fringe t)
      markdown
@@ -32,6 +33,8 @@
      spotify
      syntax-checking
      themes-megapack
+     ruby
+     vagrant
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -67,8 +70,8 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(minimal-light
-                         minimal)
+   dotspacemacs-themes '(minimal
+                         minimal-light)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -142,6 +145,7 @@ before layers configuration."
   (setq jiralib-url "https://atlasrfid.atlassian.net:443")
   (remove-hook 'text-mode-hook #'turn-on-auto-fill)
   (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+  (setq-default git-enable-github-support t)
   ;; org-mode key bindings ------------------------------------------------------
 
   )

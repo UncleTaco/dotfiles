@@ -1,0 +1,59 @@
+#+TITLE: Prose Mode Configuration, in Literate Form
+#+AUTHOR: Elais Jackson
+#+EMAIL: elais.player@gmail.com
+#+LANGUAGE: emacs-lisp
+#+STARTUP: align indent fold nodlcheck hidestars oddeven lognotestate
+* Introduction
+** What is this, why is it worthwhile?
++ I wanted to make a literate programming (LP) single file config for prose mode
+  because I think we can all agree that if we're going to create a prose for
+  writers, what better way than to present the config in a readable document?
++ Hopefully you'll read this in org mode and not through some other medium. This
+  was meant to be renderered in that mode.
+
+** Auto-Tangle
+Since we're using spacemacs, the *=init.el=* file should update every time we do
+hit space f e R.  
+
+* The Meat
+This is where the actual settings will go. There are quite a few things for us
+to consider here. First we need to define emacs behavior after entering org-mode
+(things like line wrapping, fill column, etc.), then we need to define our
+functions and keybindings.
+
+** Config
+Here we define hooks and settings to take affect once we enter org-mode.
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/config.el" :noweb 
+  ;; sets the default user's information properly.
+  (setq user-full-name "elais jackson"
+        user-mail-address "elais.player@gmail.com")
+
+  ;; fontify code in code blocks
+  (setq org-src-fontify-natively t)
+
+  ;; text wrapping at 80 columns by default (only text)
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  (add-hook 'text-mode-hook
+            '(lambda() (set-fill-column 80)))
+#+end_src
+
+#+RESULTS:
+| (lambda nil (set-fill-column 80)) | turn-on-auto-fill | (lambda nil (flyspell-mode 1)) | turn-on-visual-line-mode | text-mode-hook-identify |
+
+** Keybindings
+Here we define some keybindings to activate writeroom and handle sentence navigation.
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/keybindings.el" :noweb
+  ;; here we define some keybindings for sentence navigation
+  (define-key evil-normal-state-map ")" 'sn/evil-forward-sentence)
+  (define-key evil-normal-state-map "(" 'sn/evil-backward-sentence)
+  (define-key evil-normal-state-map "g)" 'sn/evil-forward-sentence-end)
+  (define-key evil-normal-state-map "g(" 'sn/evil-backward-sentence-end)
+  (define-key evil-outer-text-objects-map "S" 'sn/evil-outer-sentence)
+  (define-key evil-inner-text-objects-map "S" 'sn/evil-inner-sentence)
+
+  ;; a binding to activate writeroom-mode
+  (evil-leader/set-key "tW" 'writeroom-mode)
+#+end_src
+
+#+RESULTS:
+

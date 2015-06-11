@@ -22,6 +22,7 @@
         cm-mode
         markdown-mode+
         olivetti
+        writeroom-mode
 
         ;; etc
         sentence-navigation
@@ -55,6 +56,15 @@
 (defun prose/init-sentence-navigation ()
   (use-package sentence-navigation
     :defer t))
+
+(defun prose/init-writeroom-mode ()
+  (use-package writeroom-mode
+    :defer t))
+
+(defun open-config-file ()
+  "loads the emacs lisp code blocks embedded in the Org-Mode files"
+  (interactive)
+  (org-babel-load-file "~/.emacs.d/private/prose/config.org"))
 ;;
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:
