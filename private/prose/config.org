@@ -63,34 +63,12 @@ Define some keybindings to activate writeroom and handle sentence navigation.
 
 ** Functions
 I define functions here, because they are multiline, most will get their own codeblocks.
-*** Fill and Unfill paragraph
-These two functions fill and unfill the paragraph. These are useful for when
-someone wants to use a mode other than org.
-#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb
-  (defun my/unfill-paragraph (&optional region)
-    "Takes a multi-line paragraph and makes it into a single line of text"
-    (interactive (progn
-                   (barf-if-buffer-read-only)
-                   (list t)))
-    (let ((fill-column (point-max)))
-      (fill-paragraph nil region)))
-  (bind-key "M-Q" 'my/unfill-paragraph)
-
-  (defun my/fill-or-unfill-paragraph (&optional unfill region)
-    "Fill paragraph (or Region)"
-    (interactive (progn
-                   (barf-if-buffer-read-only)
-                   (list (if current-prefix-arg 'unfill) t)))
-    (let ((fill-column (if unfill (point-max) fill-column)))
-      (fill-paragraph nil region)))
-  (bind-key "M-q" 'my/fill-or-unfill-paragraph)
-#+end_src
 *** TODO Distraction Free Writing
 This section defines all of the functions to implement that lead to a
 distraction free writing environment
 
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb
-  (defun my/toggle-writing-mode ()
+  (defun toggle-writing-mode ()
     "Focus on writing"
     (interactive)
     (cond ((bound-and-true-p olivetti-mode)
@@ -173,4 +151,26 @@ distraction free writing environment
             (cons margin margin)))
          (t
           writing-margins-if-failed-guess)))))
+#+end_src
+*** Fill and Unfill paragraph
+These two functions fill and unfill the paragraph. These are useful for when
+someone wants to use a mode other than org.
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb
+  (defun my/unfill-paragraph (&optional region)
+    "Takes a multi-line paragraph and makes it into a single line of text"
+    (interactive (progn
+                   (barf-if-buffer-read-only)
+                   (list t)))
+    (let ((fill-column (point-max)))
+      (fill-paragraph nil region)))
+  (bind-key "M-Q" 'my/unfill-paragraph)
+
+  (defun my/fill-or-unfill-paragraph (&optional unfill region)
+    "Fill paragraph (or Region)"
+    (interactive (progn
+                   (barf-if-buffer-read-only)
+                   (list (if current-prefix-arg 'unfill) t)))
+    (let ((fill-column (if unfill (point-max) fill-column)))
+      (fill-paragraph nil region)))
+  (bind-key "M-q" 'my/fill-or-unfill-paragraph)
 #+end_src

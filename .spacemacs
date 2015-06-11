@@ -146,6 +146,8 @@ before layers configuration."
   (remove-hook 'text-mode-hook #'turn-on-auto-fill)
   (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
   (setq-default git-enable-github-support t)
+  (setq tab-width 2
+        indent-tabs-mode nil)
   ;; org-mode key bindings ------------------------------------------------------
 
   )
