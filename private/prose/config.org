@@ -47,7 +47,15 @@ Define hooks and settings to take affect once we enter org-mode.
 ** Keybindings
 Define some keybindings to activate writeroom and handle sentence navigation.
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/keybindings.el" :noweb
-  ;; here we define some keybindings for sentence navigation
+  ;; keybindings for artbollocks mode
+  (evil-leader/set-key-for-mode 'artbollocks-mode
+    "mmw" 'artbollocks-word-count
+    "mms" 'artbollocks-sentence-count
+    "mmr" 'artbollocks-readability-index
+    "mme" 'artbollocks-reading-ease
+    "mmg" 'artbollocks-grade-level)
+
+  ;; keybindings for sentence navigation
   (define-key evil-normal-state-map ")" 'sn/evil-forward-sentence)
   (define-key evil-normal-state-map "(" 'sn/evil-backward-sentence)
   (define-key evil-normal-state-map "g)" 'sn/evil-forward-sentence-end)
@@ -103,8 +111,15 @@ distraction free writing environment
            (olivetti-toggle-hide-modeline)
            (toggle-frame-fullscreen)
            (menu-bar-mode 0))))
+#+end_src
 
-  ;; the next two functions are going to deal with resized text, margins, and windows
+The next two functions are going to deal with resized text, margins, and
+windows. This is based largely off of the configurations found in darkroom mode
+which is, sadly, not available on MELPA. When originally working on this, I ran
+into a problem inherent in resizing text was that the window and buffer didn not
+scale to match the new character widths. This was taken wholly from the darkroom
+project... I apologize for nothing.
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb
   (defun writing--window-width (&optional window)
     "calculate width of window in columns, considering text scaling"
     (when (= (point-min) (point-max))
