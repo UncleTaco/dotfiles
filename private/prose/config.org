@@ -6,15 +6,11 @@
 * Introduction
 ** What is this, why is it worthwhile?
 + I wanted to make a literate programming (LP) single file config for prose mode
-  because I think we can all agree that if we're going to create a prose for
-  writers, what better way than to present the config in a readable document?
+  because I think we can all agree that if we're going to create a dedicated
+  prose-mode for writers, what better way than to present the config than in a
+  readable document?
 + Hopefully you'll read this in org mode and not through some other medium. This
   was meant to be renderered in that mode.
-
-** Auto-Tangle
-Since we're using spacemacs, the *=init.el=* file should update every time we do
-hit space f e R.  
-
 * The Meat
 This is where the actual settings will go. There are quite a few things for us
 to consider here. First we need to define emacs behavior after entering org-mode
@@ -22,7 +18,7 @@ to consider here. First we need to define emacs behavior after entering org-mode
 functions and keybindings.
 
 ** Config
-Here we define hooks and settings to take affect once we enter org-mode.
+Define hooks and settings to take affect once we enter org-mode.
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/config.el" :noweb 
   ;; sets the default user's information properly.
   (setq user-full-name "elais jackson"
@@ -31,9 +27,17 @@ Here we define hooks and settings to take affect once we enter org-mode.
   ;; fontify code in code blocks
   (setq org-src-fontify-natively t)
 
+  ;; enable flyspell-mode and writegood-mode when org-mode is active
+  (add-hook 'org-mode-hook
+            (lambda()
+              (flyspell-mode)))
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (writegood-mode)))
+
   ;; text wrapping at 80 columns by default (only text)
-  (add-hook 'text-mode-hook 'turn-on-auto-fill)
-  (add-hook 'text-mode-hook
+  (add-hook 'org-mode-hook 'turn-on-auto-fill)
+  (add-hook 'org-mode-hook
             '(lambda() (set-fill-column 80)))
 #+end_src
 
@@ -41,7 +45,7 @@ Here we define hooks and settings to take affect once we enter org-mode.
 | (lambda nil (set-fill-column 80)) | turn-on-auto-fill | (lambda nil (flyspell-mode 1)) | turn-on-visual-line-mode | text-mode-hook-identify |
 
 ** Keybindings
-Here we define some keybindings to activate writeroom and handle sentence navigation.
+Define some keybindings to activate writeroom and handle sentence navigation.
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/keybindings.el" :noweb
   ;; here we define some keybindings for sentence navigation
   (define-key evil-normal-state-map ")" 'sn/evil-forward-sentence)
@@ -57,3 +61,116 @@ Here we define some keybindings to activate writeroom and handle sentence naviga
 
 #+RESULTS:
 
+** Functions
+I define functions here, because they are multiline, most will get their own codeblocks.
+*** Fill and Unfill paragraph
+These two functions fill and unfill the paragraph. These are useful for when
+someone wants to use a mode other than org.
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb
+  (defun my/unfill-paragraph (&optional region)
+    "Takes a multi-line paragraph and makes it into a single line of text"
+    (interactive (progn
+                   (barf-if-buffer-read-only)
+                   (list t)))
+    (let ((fill-column (point-max)))
+      (fill-paragraph nil region)))
+  (bind-key "M-Q" 'my/unfill-paragraph)
+
+  (defun my/fill-or-unfill-paragraph (&optional unfill region)
+    "Fill paragraph (or Region)"
+    (interactive (progn
+                   (barf-if-buffer-read-only)
+                   (list (if current-prefix-arg 'unfill) t)))
+    (let ((fill-column (if unfill (point-max) fill-column)))
+      (fill-paragraph nil region)))
+  (bind-key "M-q" 'my/fill-or-unfill-paragraph)
+#+end_src
+*** TODO Distraction Free Writing
+This section defines all of the functions to implement that lead to a
+distraction free writing environment
+
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb
+  (defun my/toggle-writing-mode ()
+    "Focus on writing"
+    (interactive)
+    (cond ((bound-and-true-p olivetti-mode)
+           (olivetti-mode 0)
+           (olivetti-toggle-hide-modeline)
+           (toggle-frame-fullscreen)
+           (menu-bar-mode 1))
+          (t
+           (olivetti-mode 1)
+           (olivetti-toggle-hide-modeline)
+           (toggle-frame-fullscreen)
+           (menu-bar-mode 0))))
+
+  ;; the next two functions are going to deal with resized text, margins, and windows
+  (defun writing--window-width (&optional window)
+    "calculate width of window in columns, considering text scaling"
+    (when (= (point-min) (point-max))
+      (error "Cannot calculate the width of a single character"))
+    (let* ((window (or window (selected-window)))
+           (scaled-char-width (car (window-text-pixel-size
+                                    window
+                                    (point-min) (1+ (point-min)))))
+           (char-width (frame-char-width))
+           (margins (window-margins window)))
+      (cons (truncate
+             (+ (window-width window 'pixelwise)
+                (* char-width (or (car margins) 0))
+                (* char-width (or (cdr margins) 0)))
+             scaled-char-width)
+            scaled-char-width)))
+
+  (defun writing-guess-margins (window)
+    "Guess suitable margins for 'writing margins'"
+    (if (or visual-line-mode
+            (and buffer-face-mode
+                 (eq 'variable-pitch buffer-face-mode-face))
+            (= (point-min) (point-max)))
+        writing-margins-if-failed-guess
+      (let* ((window-width-info (if (integerp window)
+                                    window
+                                  (writing--window-width window)))
+             (window-width (car window-width-info))
+             (scaled-char-width (cdr window-width-info))
+             (top-quartile-avg
+              (or writing--guess-margins-statistics-cache
+                  (set
+                   (make-local-variable 'writeroom--guess-margins-statistics-cache)
+                   (let* ((line-widths
+                           (save-excursion
+                             (goto-char (point-min))
+                             (cl-loop for start = (point)
+                                      while (search-forward "\n"
+                                                            20000
+                                                            'no-error)
+                                      for width = (truncate
+                                                   (car
+                                                    (window-text-pixel-size
+                                                     window
+                                                     start (1- (point))))
+                                                   scaled-char-width)
+                                      unless (zerop width)
+                                      collect width)))
+                          (n4 (max 1 (/ (length line-widths) 4))))
+                     (/ (apply '+ (cl-subseq (sort line-widths '>) 0 n4)) n4))))))
+        (cond
+         ((> top-quartile-avg
+             window-width)
+          (message "long lines detected, consider visual-line-mode")
+          writing-margins-if-failed-guess)
+         ((> top-quartile-avg (* 0.9 fill-column))
+          ;; calculate margins so that 'fill-column' + 1 colmns are
+          ;; centered on the window
+          (let ((margin (truncate (* (- window-width (1+ fill-column))
+                                     (/ (float scaled-char-width)
+                                        (frame-char-width)))
+                                  2)))
+            (if writing-verbose
+                (message "Choosing %s-wie margins based on fill-column %s"
+                         margin fill-column))
+            (cons margin margin)))
+         (t
+          writing-margins-if-failed-guess)))))
+#+end_src
