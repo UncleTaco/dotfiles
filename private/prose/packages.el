@@ -63,8 +63,7 @@
 
 (defun open-config-file ()
   "loads the emacs lisp code blocks embedded in the Org-Mode files"
-  (interactive)
-  (org-babel-load-file "~/.emacs.d/private/prose/config.org"))
+  (org-babel-load-file "~/.emacs.d/private/prose/README.org"))
 ;;
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:

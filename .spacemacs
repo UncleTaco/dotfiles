@@ -148,6 +148,9 @@ before layers configuration."
   (setq-default git-enable-github-support t)
   (setq tab-width 2
         indent-tabs-mode nil)
+  ;; set transparency
+  (set-frame-parameter (selected-frame) 'alpha '(90 90))
+  (add-to-list 'default-frame-alist '(alpha 90 90))
   ;; org-mode key bindings ------------------------------------------------------
 
   )
