@@ -1,17 +1,5 @@
 
-(defun toggle-prose-mode ()
-  "Focus on prose"
-  (interactive)
-  (cond ((bound-and-true-p olivetti-mode)
-         (olivetti-mode 0)
-         (olivetti-toggle-hide-modeline)
-         (toggle-frame-fullscreen)
-         (menu-bar-mode 1))
-        (t
-         (olivetti-mode 1)
-         (olivetti-toggle-hide-modeline)
-         (toggle-frame-fullscreen)
-         (menu-bar-mode 0))))
+
 
 (defcustom prose-margins 'prose-guess-margins
   "Margins to use in `prose-mode'.
@@ -63,6 +51,38 @@ symmetical margins."
 
 (defvar prose--guess-margins-statistics-cache nil
   "Cache used by `prose-guess-margins'.")
+
+;; (defcustom prose-global-effects '(prose-toggle-alpha)
+;;   "docstring."
+;;  :group 'prose
+;;  :type '(set (const :tag "Disable transparency" prose-toggle-alpha)))
+
+(defmacro define-prose-global-effect (fp value)
+  "Define a global effect.
+The effect is activated by setting frame parameter FP to VALUE.
+FP should be an unquoted symbol, the name of a frame parameter;
+VALUE must be quoted (unless it is a string or a number, of
+course). It can also be an unquoted symbol, in which case it
+should be the name of a global variable whose value is then
+assigned to FP.
+This macro defines a function `prose-toggle-<FP>' that takes
+one argument and activates the effect if this argument is t and
+deactivates it when it is nil. When the effect is activated,
+the original value of frame parameter FP is stored in a frame
+parameter `prose-<FP>', so that it can be restored when the
+effect is deactivated."
+  (declare (indent defun))
+  (let ((wfp (intern (format "prose-%s" fp))))
+    `(fset (quote ,(intern (format "prose-toggle-%s" fp)))
+           (lambda (arg)
+             (if arg
+                 (progn
+                   (set-frame-parameter nil (quote ,wfp) (frame-parameter nil (quote ,fp)))
+                   (set-frame-parameter nil (quote ,fp) ,value))
+               (set-frame-parameter nil (quote ,fp) (frame-parameter nil (quote ,wfp)))
+               (set-frame-parameter nil (quote ,wfp) nil))))))
+
+(define-prose-global-effect alpha '(100 100))
 
 (defun prose--window-width (&optional window)
   "calculate width of window in columns, considering text scaling"
@@ -207,6 +227,14 @@ symmetical margins."
 (defvar prose--saved-state nil
   "Saved state before `prose-mode' is turned on.
 Alist of (VARIABLE . BEFORE-VALUE)")
+
+;; (defun prose--activate-global-effects (arg)
+;;   "Activate or deactivate global effects.
+;; The effects are activated if ARG is non-nil, and deactivated
+;; otherwise."
+;;   (mapc (lambda (fn)
+;;           (funcall fn arg))
+;;         prose-global-effects))
 
 (defun prose--enter (&optional just-margins)
   "Save current state and enter prose for the current buffer.

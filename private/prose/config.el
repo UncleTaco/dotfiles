@@ -1,8 +1,16 @@
 
-;; sets the default user's information properly.
-(add-to-list
- 'org-structure-template-alist
- '("c" "#+NAME: ?\n#+BEGIN_SRC emacs-lisp :tangle \"~/\" :noweb \n\n#+END_SRC"))
+;; sets up toggle-prose-mode
+(eval-after-load "prose"
+  '(progn
+     ;; create a toggle-prose-mode function
+     (defun toggle-prose-mode ()
+       "Toggle extra settings for distraction free writing."
+       (interactive)
+       (cond ((bound-and-true-p prose-mode)
+              (prose-mode -1))
+             (t
+              (prose-mode 1))))
+     (evil-leader/set-key "tW" 'toggle-prose-mode)))
 
 ;; fontify code in code blocks
 (setq org-src-fontify-natively t)

@@ -43,7 +43,9 @@
 
 (defun prose/init-artbollocks-mode ()
   (use-package artbollocks-mode
-    :defer t))
+    :defer t
+    :init
+    (artbollocks-mode 0)))
 
 (defun prose/init-cm-mode ()
   (use-package cm-mode
@@ -51,7 +53,9 @@
 
 (defun prose/init-olivetti ()
   (use-package olivetti
-    :defer t))
+    :defer t
+    :init
+    (olivetti-mode 0)))
 
 (defun prose/init-sentence-navigation ()
   (use-package sentence-navigation
@@ -61,9 +65,6 @@
   (use-package writeroom-mode
     :defer t))
 
-(defun open-config-file ()
-  "loads the emacs lisp code blocks embedded in the Org-Mode files"
-  (org-babel-load-file "~/.emacs.d/private/prose/README.org"))
 ;;
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:
