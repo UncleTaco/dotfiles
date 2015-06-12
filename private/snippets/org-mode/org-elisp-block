@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# contributor: elais jackson
+# name: org-elisp-src
+# key: 
+# --
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/" :noweb 
+
+#+end_src
