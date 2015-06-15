@@ -16,14 +16,11 @@
       '(
         ;; major modes
         pandoc-mode
-
         ;; minor modes
         artbollocks-mode
         cm-mode
         markdown-mode+
         olivetti
-        writeroom-mode
-
         ;; etc
         sentence-navigation
       ;; package proses go here
@@ -43,9 +40,7 @@
 
 (defun prose/init-artbollocks-mode ()
   (use-package artbollocks-mode
-    :defer t
-    :init
-    (artbollocks-mode 0)))
+    :defer t))
 
 (defun prose/init-cm-mode ()
   (use-package cm-mode
@@ -53,17 +48,12 @@
 
 (defun prose/init-olivetti ()
   (use-package olivetti
-    :defer t
-    :init
-    (olivetti-mode 0)))
+    :defer t))
 
 (defun prose/init-sentence-navigation ()
   (use-package sentence-navigation
     :defer t))
 
-(defun prose/init-writeroom-mode ()
-  (use-package writeroom-mode
-    :defer t))
 
 ;;
 ;; Often the body of an initialize function uses `use-package'

@@ -20,7 +20,6 @@
      auto-completion
      better-defaults
      clojure
-     emacs-lisp
      (git :variables
           git-gutter-use-fringe t)
      markdown
@@ -30,7 +29,7 @@
      personal
      prose
      python
-     spotify
+     slime
      syntax-checking
      themes-megapack
      ruby
@@ -70,8 +69,8 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(minimal
-                         minimal-light)
+   dotspacemacs-themes '(minimal-light
+                         minimal)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -149,20 +148,17 @@ before layers configuration."
   (setq tab-width 2
         indent-tabs-mode nil)
   ;; set transparency
-  (set-frame-parameter (selected-frame) 'alpha '(90 90))
-  (add-to-list 'default-frame-alist '(alpha 90 90))
   ;; org-mode key bindings ------------------------------------------------------
-  (org-babel-load-file "~/.emacs.d/private/prose/README.org")
-  ;; (eval-after-load "org-babel"
-  ;;   '(org-babel-load-file "~/.emacs.d/private/prose/README.org")
-  ;;   )
-  )
+  (eval-after-load "org"
+    '(progn
+       (org-babel-load-file "~/.emacs.d/private/prose/README.org")
+       (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")))
 
 (defun dotspacemacs/config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-  )
+  ))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -213,11 +209,3 @@ layers configuration."
  '(org-fast-tag-selection-single-key (quote expert))
  '(org-reverse-note-order t)
  '(ring-bell-function (quote ignore) t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((((class color) (min-colors 89)) (:background "grey10" :foreground "grey90"))))
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

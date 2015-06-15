@@ -10,30 +10,36 @@
 ;;
 ;;; License: GPLv3
 
-(defvar personal-packages
-  '(
-    ;; package personals go here
-    )
-  "List of all packages to install and/or initialize. Built-in packages
-which require an initialization must be listed explicitly in the list.")
-
+(setq personal-packages
+      '(
+        org-projectile
+        ;;package personals go here
+        ))
 (defvar personal-excluded-packages '()
   "List of packages to exclude.")
 
 ;; For each package, define a function personal/init-<package-personal>
 ;;
-;; (defun personal/init-my-package ()
-;;   "Initialize my package"
-;;   )
+(defun personal/init-org-projectile ()
+  "Initialize my package"
+  (use-package org-projectile
+    :defer t
+    :config
+    (progn
+      (setq org-projectile:per-repo-filename "my_project.org")
+      (append org-agenda-files (org-projectile:todo-files))
+      (add-to-list 'org-capture-templates (org-projectile:project-todo-entry "p")))
+    :ensure t))
+
+(defun generate-org-settings ()
+  "Generate org-mode settings"
+  (interactive)
+  (find-file "~/.emacs.d/private/personal/Org-Settings.org"))
+
 (defun edit-personal-keybindings ()
   "Edit personal keybindings"
   (interactive)
   (find-file "~/.emacs.d/private/personal/keybindings.el")
-  )
-(defun edit-personal-funcs ()
-  "Edit personal functions"
-  (interactive)
-  (find-file "~/.emacs.d/private/personal/funcs.el")
   )
 ;;
 ;; Often the body of an initialize function uses `use-package'

@@ -20,29 +20,11 @@ functions and keybindings.
 ** Config
 Define hooks and settings to take affect once we enter org-mode.
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/config.el" :noweb 
-  ;; sets up toggle-prose-mode
-  (eval-after-load "prose"
-    '(progn
-       ;; create a toggle-prose-mode function
-       (defun toggle-prose-mode ()
-         "Toggle extra settings for distraction free writing."
-         (interactive)
-         (cond ((bound-and-true-p prose-mode)
-                (prose-mode -1))
-               (t
-                (prose-mode 1))))
-       (evil-leader/set-key "tW" 'toggle-prose-mode)))
 
   ;; fontify code in code blocks
   (setq org-src-fontify-natively t)
 
   ;; enable flyspell-mode and writegood-mode when org-mode is active
-  (add-hook 'org-mode-hook
-            (lambda()
-              (flyspell-mode)))
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (artbollocks-mode)))
 
   ;; text wrapping at 80 columns by default (only text)
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
@@ -51,7 +33,6 @@ Define hooks and settings to take affect once we enter org-mode.
 
 #+end_src
 #+RESULTS:
-| spacemacs/load-yasnippet | org-bullets-mode | git/load-git-gutter | evil-org-mode | #[nil \300\301\302\303\304$\207 [org-add-hook change-major-mode-hook org-show-block-all append local] 5] | #[nil \300\301\302\303\304$\207 [org-add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | (lambda nil (set-fill-column 80)) | turn-on-auto-fill | (lambda nil (artbollocks-mode)) | (lambda nil (flyspell-mode)) |
 
 ** Keybindings
 Define some keybindings to activate writeroom and handle sentence navigation.
@@ -77,9 +58,10 @@ Define some keybindings to activate writeroom and handle sentence navigation.
 #+RESULTS:
 : sn/evil-inner-sentence
 
-** Functions
+** Tools
 I define functions here, because they are multiline, most will get their own codeblocks.
-*** TODO Distraction Free Writing
+*** DONE Distraction Free Writing
+CLOSED: [2015-06-12 Fri 15:54]
 
 This section defines all of the functions to implement that lead to a
 distraction free prose environment. Its basically darkroom, but I wanted it in this
@@ -112,7 +94,7 @@ release at https://github.com/capitaomorte/darkroom
                      (function prose-guess-margins))
       :group 'prose)
 
-    (defcustom prose-text-scale-increase 2
+    (defcustom prose-text-scale-increase 1
       "Steps to increase text size when in `prose-mode'.
     Value is passed to `text-scale-increase'."
       :type 'integer
@@ -462,6 +444,23 @@ And finally, the actual definition of the minor modes
           (t
            (prose--leave))))
 
+  ;; sets up toggle-prose-mode
+  (defun prose/toggle-prose-mode ()
+    "Toggle extra settings for distraction free writing."
+    (interactive)
+    (cond ((bound-and-true-p prose-mode)
+           (widen)
+           (prose-mode -1)
+           (winner-redo))
+          (t
+           (outline-mark-subtree)
+           (narrow-to-region (region-beginning)(region-end))
+           (deactivate-mark)
+           (delete-other-windows)
+           (prose-mode 1)
+           (message "happy writing"))))
+  (evil-leader/set-key "tW" 'prose/toggle-prose-mode)
+
 #+end_src
 
 *** Fill and Unfill paragraph
@@ -490,3 +489,24 @@ someone wants to use a mode other than org.
 #+RESULTS:
 : my/fill-or-unfill-paragraph
 
+*** TODO Writing Keywords
+This is based on Tony Ballantyne's model for novel writing in org-mode. We
+define a few GTD keywords to help us out. I may move this later. My main GTD
+file's keywords are local, and it may be prudent to make them global as well. It
+will probably be the case that I create a capture template to house these all,
+because I don't think local stuff here should have global effects.
+#+begin_src emacs-lisp :tangle yes
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t!)"  "NEXT(n!)" "|" "DONE(d!)")
+                (sequence "REPEAT(r)"  "WAIT(w!)"  "|"  "PAUSED(p@/!)" "CANCELLED(c@/!)" )
+                (sequence "IDEA(i!)" "MAYBE(y!)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
+                )))
+#+end_src
+
+*** TODO Projectile Integration
+We're going to define novel properties here. The purpose of these are to make
+lookups easier during the novel writing process. We'll be able to generate
+tables for the metadata in the novel itself. These may do better if stored in
+the actual novel...
+#+begin_src emacs-lisp :tangle yes
+#+end_src

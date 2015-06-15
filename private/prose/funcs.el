@@ -20,7 +20,7 @@ Value is effective when `prose-mode' is toggled."
                  (function prose-guess-margins))
   :group 'prose)
 
-(defcustom prose-text-scale-increase 2
+(defcustom prose-text-scale-increase 1
   "Steps to increase text size when in `prose-mode'.
 Value is passed to `text-scale-increase'."
   :type 'integer
@@ -328,6 +328,23 @@ screen. Text size is increased (display engine allowing) by
          (prose--enter-or-leave))
         (t
          (prose--leave))))
+
+;; sets up toggle-prose-mode
+(defun prose/toggle-prose-mode ()
+  "Toggle extra settings for distraction free writing."
+  (interactive)
+  (cond ((bound-and-true-p prose-mode)
+         (widen)
+         (prose-mode -1)
+         (winner-redo))
+        (t
+         (outline-mark-subtree)
+         (narrow-to-region (region-beginning)(region-end))
+         (deactivate-mark)
+         (delete-other-windows)
+         (prose-mode 1)
+         (message "happy writing"))))
+(evil-leader/set-key "tW" 'prose/toggle-prose-mode)
 
 (defun my/unfill-paragraph (&optional region)
   "Takes a multi-line paragraph and makes it into a single line of text"
