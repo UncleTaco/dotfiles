@@ -141,12 +141,16 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
    )
   ;; User initialization goes here
-  (setq jiralib-url "https://atlasrfid.atlassian.net:443")
-  (remove-hook 'text-mode-hook #'turn-on-auto-fill)
-  (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
-  (setq-default git-enable-github-support t)
+  ;; Tab settings
   (setq tab-width 2
         indent-tabs-mode nil)
+  ;; Whitespace settings
+  (setq whitespace-action '(auto-cleanup))
+  (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
+  ;; Powerline theme
+  (setq jiralib-url "https://atlasrfid.atlassian.net:443")
+  (setq visual-line-mode 1)
+  (setq-default git-enable-github-support t)
   ;; turn off transparency on fullscreen
   ;; (add-hook 'max
   ;;           '(if (/= (cadr (frame-parameter (selected-frame) 'alpha)) 100)
