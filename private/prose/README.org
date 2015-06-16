@@ -489,19 +489,6 @@ someone wants to use a mode other than org.
 #+RESULTS:
 : my/fill-or-unfill-paragraph
 
-*** TODO Writing Keywords
-This is based on Tony Ballantyne's model for novel writing in org-mode. We
-define a few GTD keywords to help us out. I may move this later. My main GTD
-file's keywords are local, and it may be prudent to make them global as well. It
-will probably be the case that I create a capture template to house these all,
-because I don't think local stuff here should have global effects.
-#+begin_src emacs-lisp :tangle yes
-  (setq org-todo-keywords
-        (quote ((sequence "TODO(t!)"  "NEXT(n!)" "|" "DONE(d!)")
-                (sequence "REPEAT(r)"  "WAIT(w!)"  "|"  "PAUSED(p@/!)" "CANCELLED(c@/!)" )
-                (sequence "IDEA(i!)" "MAYBE(y!)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
-                )))
-#+end_src
 
 *** TODO Projectile Integration
 We're going to define novel properties here. The purpose of these are to make

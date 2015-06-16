@@ -20,16 +20,16 @@
 
 ;; For each package, define a function personal/init-<package-personal>
 ;;
-(defun personal/init-org-projectile ()
-  "Initialize my package"
-  (use-package org-projectile
-    :defer t
-    :config
-    (progn
-      (setq org-projectile:per-repo-filename "my_project.org")
-      (append org-agenda-files (org-projectile:todo-files))
-      (add-to-list 'org-capture-templates (org-projectile:project-todo-entry "p")))
-    :ensure t))
+;; (defun personal/init-org-projectile ()
+;;   "Initialize my package"
+;;   (use-package org-projectile
+;;     :defer t
+;;     :config
+;;     (progn
+;;       (setq org-projectile:per-repo-filename "my_project.org")
+;;       (append org-agenda-files (org-projectile:todo-files))
+;;       (add-to-list 'org-capture-templates (org-projectile:project-todo-entry "p")))
+;;     :ensure t))
 
 (defun generate-org-settings ()
   "Generate org-mode settings"

@@ -76,7 +76,7 @@ before layers configuration."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 14
+                               :size 13
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -147,7 +147,10 @@ before layers configuration."
   (setq-default git-enable-github-support t)
   (setq tab-width 2
         indent-tabs-mode nil)
-  ;; set transparency
+  ;; turn off transparency on fullscreen
+  ;; (add-hook 'max
+  ;;           '(if (/= (cadr (frame-parameter (selected-frame) 'alpha)) 100)
+  ;;                (spacemacs/toggle-transparent-frame)))
   ;; org-mode key bindings ------------------------------------------------------
   (eval-after-load "org"
     '(progn

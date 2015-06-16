@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# contributor: elais jackson
-# name: elisp-prose
-# key: ep 
-# group: org-mode
-# --
-\#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb 
-
-\#+end_src
