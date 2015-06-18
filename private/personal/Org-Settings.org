@@ -21,6 +21,7 @@ are the six paths.
   I write physical morning pages, so this may or may not get used.
 - /notes/ snippets and notes
 - /groceries/ where I store grocery lists, though I usually let Kat do it.
+
 ** Folders  
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/funcs.el" :noweb
   (defun open-org-dir ()

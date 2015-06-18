@@ -1,6 +1,4 @@
 
-
-
 (defcustom prose-margins 'prose-guess-margins
   "Margins to use in `prose-mode'.
 Its value can be:
@@ -177,7 +175,7 @@ effect is deactivated."
   "Buffer local factor affecting `prose--set-margins'")
 
 (defun prose--set-margins ()
-  "Set darkroom margins for currently selected window"
+  "Set prose-mode margins for currently selected window"
   (let* ((window-configuration-change-hook nil)
          (window (selected-window))
          (margins (prose--compute-margins window)))
@@ -274,7 +272,6 @@ With optional JUST-MARGINS, just set the margins."
         (t
          ;; for clarity, don't do anything
          )))
-
 (declare-function prose-tentative-mode "prose" t)
 
 ;;;###autoload
@@ -284,23 +281,22 @@ mode is active, everything but the buffer's text is elided from
 view. The buffer margins are set so that text is centered on
 screen. Text size is increased (display engine allowing) by
 `prose-text-scale-increase'." nil nil nil
-  (when prose-tentative-mode
-    (display-warning
-     'prose
-     (concat "Turning off `prose-tentative-mode' first. "
-             "It doesn't go with `prose-mode'.")
-     (let ((prose-mode nil))
-       (prose-tentative-mode -1))))
-  (cond (prose-mode
-         (prose--enter)
-         (add-hook 'window-configuration-change-hook 'prose--set-margins
-                   t t))
-        (t
-         (prose--leave)
-         (remove-hook 'window-configuration-change-hook 'prose--set-margins
-                      t))))
+(when prose-tentative-mode
+  (display-warning
+   'prose
+   (concat "Turning off `prose-tentative-mode' first. "
+           "It doesn't go with `prose-mode'.")
+   (let ((prose-mode nil))
+     (prose-tentative-mode -1))))
+(cond (prose-mode
+       (prose--enter)
+       (add-hook 'window-configuration-change-hook 'prose--set-margins
+                 t t))
+      (t
+       (prose--leave)
+       (remove-hook 'window-configuration-change-hook 'prose--set-margins
+                    t))))
 
-;;;###autoload
 (define-minor-mode prose-tentative-mode
   "Enters `prose-mode' when all other windows are deleted."
   nil " Room" prose-mode-map
@@ -329,20 +325,20 @@ screen. Text size is increased (display engine allowing) by
         (t
          (prose--leave))))
 
-;; sets up toggle-prose-mode
 (defun prose/toggle-prose-mode ()
   "Toggle extra settings for distraction free writing."
   (interactive)
   (cond ((bound-and-true-p prose-mode)
          (widen)
-         (prose-mode -1)
-         (winner-redo))
+         (setq line-spacing nil)
+         (prose-mode 0))
         (t
          (outline-mark-subtree)
          (narrow-to-region (region-beginning)(region-end))
          (deactivate-mark)
-         (delete-other-windows)
          (prose-mode 1)
+         (prose-guess-margins)
+         (setq line-spacing 0.4)
          (message "happy writing"))))
 (evil-leader/set-key "tW" 'prose/toggle-prose-mode)
 

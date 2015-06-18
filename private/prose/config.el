@@ -7,4 +7,4 @@
 ;; text wrapping at 80 columns by default (only text)
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 (add-hook 'org-mode-hook
-          '(lambda() (set-fill-column 80)))
+          '(lambda () set-fill-column 64))
