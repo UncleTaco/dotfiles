@@ -12,7 +12,7 @@
 
 (setq personal-packages
       '(
-        org-projectile
+        powerline-evil
         ;;package personals go here
         ))
 (defvar personal-excluded-packages '()
@@ -36,6 +36,10 @@
   (interactive)
   (find-file "~/.emacs.d/private/personal/Org-Settings.org"))
 
+(defun personal/init-powerline-evil()
+  "new powerline themes"
+  (use-package powerline-evil
+    :defer t))
 (defun edit-personal-keybindings ()
   "Edit personal keybindings"
   (interactive)

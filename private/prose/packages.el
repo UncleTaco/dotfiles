@@ -21,6 +21,7 @@
         cm-mode
         markdown-mode+
         olivetti
+        writeroom-mode
         ;; etc
         sentence-navigation
       ;; package proses go here
@@ -44,6 +45,10 @@
 
 (defun prose/init-cm-mode ()
   (use-package cm-mode
+    :defer t))
+
+(defun prose/init-writeroom-mode ()
+  (use-package writeroom-mode
     :defer t))
 
 (defun prose/init-olivetti ()

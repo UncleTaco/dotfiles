@@ -29,7 +29,7 @@ Define hooks and settings to take affect once we enter org-mode.
   ;; text wrapping at 80 columns by default (only text)
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
   (add-hook 'org-mode-hook
-            '(lambda() (set-fill-column 80)))
+            '(lambda () set-fill-column 64))
 
 #+end_src
 #+RESULTS:
@@ -67,100 +67,6 @@ distraction free prose environment. Its basically darkroom, but I wanted it in t
 document so that I could edit it as I saw fit. Please support the original
 release at https://github.com/capitaomorte/darkroom
 
-#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb
-#+end_src
-
-#+RESULTS:
-: toggle-prose-mode
-
-#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb
-    (defcustom prose-margins 'prose-guess-margins
-      "Margins to use in `prose-mode'.
-    Its value can be:
-    - a floating point value betweeen 0 and 1, specifies percentage of
-      window width in columns to use as a margin.
-    - a cons cell (LEFT RIGHT) specifying the left and right margins
-      in columns.
-    - a function of a single argument, a window, that returns a cons
-      cell interpreted like the previous option. An example is
-      `prose-guess-margins', which see. Beware that this function
-      is called very often, so if it does some non-trivial processing
-      on the buffer's text, consider caching that value.
-    Value is effective when `prose-mode' is toggled."
-      :type '(choice float
-                     (cons integer integer)
-                     (function-item prose-guess-margins :doc "Guess margins")
-                     (function prose-guess-margins))
-      :group 'prose)
-
-    (defcustom prose-text-scale-increase 1
-      "Steps to increase text size when in `prose-mode'.
-    Value is passed to `text-scale-increase'."
-      :type 'integer
-      :group 'prose)
-
-    (defcustom prose-fringes-outside-margins t
-      "If non-nil use fringes outside margins for `prose-mode'"
-      :type 'boolean
-      :group 'prose)
-
-    (defcustom prose-margin-increment 0.05
-      "Increment to add used in `prose-increase-margins'."
-      :type 'float
-      :group 'prose)
-
-    (defcustom prose-margins-if-failed-guess 0.15
-      "Margins when `prose-guess-margins' fails.
-    If `prose-guess-margins' failed to figure out margins to
-    center the text, use this percentage of window width for the
-    symmetical margins."
-      :type 'float
-      :group 'prose)
-
-    (defcustom prose-verbose nil
-      "If non-nil, be verbose about prose operations."
-      :type 'boolean
-      :group 'prose)
-
-    (defvar prose--guess-margins-statistics-cache nil
-      "Cache used by `prose-guess-margins'.")
-
-    ;; (defcustom prose-global-effects '(prose-toggle-alpha)
-    ;;   "docstring."
-    ;;  :group 'prose
-    ;;  :type '(set (const :tag "Disable transparency" prose-toggle-alpha)))
-
-    (defmacro define-prose-global-effect (fp value)
-      "Define a global effect.
-    The effect is activated by setting frame parameter FP to VALUE.
-    FP should be an unquoted symbol, the name of a frame parameter;
-    VALUE must be quoted (unless it is a string or a number, of
-    course). It can also be an unquoted symbol, in which case it
-    should be the name of a global variable whose value is then
-    assigned to FP.
-    This macro defines a function `prose-toggle-<FP>' that takes
-    one argument and activates the effect if this argument is t and
-    deactivates it when it is nil. When the effect is activated,
-    the original value of frame parameter FP is stored in a frame
-    parameter `prose-<FP>', so that it can be restored when the
-    effect is deactivated."
-      (declare (indent defun))
-      (let ((wfp (intern (format "prose-%s" fp))))
-        `(fset (quote ,(intern (format "prose-toggle-%s" fp)))
-               (lambda (arg)
-                 (if arg
-                     (progn
-                       (set-frame-parameter nil (quote ,wfp) (frame-parameter nil (quote ,fp)))
-                       (set-frame-parameter nil (quote ,fp) ,value))
-                   (set-frame-parameter nil (quote ,fp) (frame-parameter nil (quote ,wfp)))
-                   (set-frame-parameter nil (quote ,wfp) nil))))))
-
-    (define-prose-global-effect alpha '(100 100))
-#+end_src
-
-#+RESULTS:
-: prose
-
 We're also going to just go ahead and create a group for our prose mode stuff.
 The next two functions are going to deal with resized text, margins, and
 windows. This is based largely on the configurations found in darkroom mode
@@ -168,6 +74,90 @@ which is, sadly, not available on MELPA. When originally working on this, I ran
 into a problem inherent in resizing text was that the window and buffer didn not
 scale to match the new character widths. This was taken wholly from the darkroom
 project... I apologize for nothing.
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb 
+  (defcustom prose-margins 'prose-guess-margins
+    "Margins to use in `prose-mode'.
+  Its value can be:
+  - a floating point value betweeen 0 and 1, specifies percentage of
+    window width in columns to use as a margin.
+  - a cons cell (LEFT RIGHT) specifying the left and right margins
+    in columns.
+  - a function of a single argument, a window, that returns a cons
+    cell interpreted like the previous option. An example is
+    `prose-guess-margins', which see. Beware that this function
+    is called very often, so if it does some non-trivial processing
+    on the buffer's text, consider caching that value.
+  Value is effective when `prose-mode' is toggled."
+    :type '(choice float
+                   (cons integer integer)
+                   (function-item prose-guess-margins :doc "Guess margins")
+                   (function prose-guess-margins))
+    :group 'prose)
+
+  (defcustom prose-text-scale-increase 1
+    "Steps to increase text size when in `prose-mode'.
+  Value is passed to `text-scale-increase'."
+    :type 'integer
+    :group 'prose)
+
+  (defcustom prose-fringes-outside-margins t
+    "If non-nil use fringes outside margins for `prose-mode'"
+    :type 'boolean
+    :group 'prose)
+
+  (defcustom prose-margin-increment 0.05
+    "Increment to add used in `prose-increase-margins'."
+    :type 'float
+    :group 'prose)
+
+  (defcustom prose-margins-if-failed-guess 0.15
+    "Margins when `prose-guess-margins' fails.
+  If `prose-guess-margins' failed to figure out margins to
+  center the text, use this percentage of window width for the
+  symmetical margins."
+    :type 'float
+    :group 'prose)
+
+  (defcustom prose-verbose nil
+    "If non-nil, be verbose about prose operations."
+    :type 'boolean
+    :group 'prose)
+
+  (defvar prose--guess-margins-statistics-cache nil
+    "Cache used by `prose-guess-margins'.")
+
+  ;; (defcustom prose-global-effects '(prose-toggle-alpha)
+  ;;   "docstring."
+  ;;  :group 'prose
+  ;;  :type '(set (const :tag "Disable transparency" prose-toggle-alpha)))
+
+  (defmacro define-prose-global-effect (fp value)
+    "Define a global effect.
+  The effect is activated by setting frame parameter FP to VALUE.
+  FP should be an unquoted symbol, the name of a frame parameter;
+  VALUE must be quoted (unless it is a string or a number, of
+  course). It can also be an unquoted symbol, in which case it
+  should be the name of a global variable whose value is then
+  assigned to FP.
+  This macro defines a function `prose-toggle-<FP>' that takes
+  one argument and activates the effect if this argument is t and
+  deactivates it when it is nil. When the effect is activated,
+  the original value of frame parameter FP is stored in a frame
+  parameter `prose-<FP>', so that it can be restored when the
+  effect is deactivated."
+    (declare (indent defun))
+    (let ((wfp (intern (format "prose-%s" fp))))
+      `(fset (quote ,(intern (format "prose-toggle-%s" fp)))
+             (lambda (arg)
+               (if arg
+                   (progn
+                     (set-frame-parameter nil (quote ,wfp) (frame-parameter nil (quote ,fp)))
+                     (set-frame-parameter nil (quote ,fp) ,value))
+                 (set-frame-parameter nil (quote ,fp) (frame-parameter nil (quote ,wfp)))
+                 (set-frame-parameter nil (quote ,wfp) nil))))))
+
+  (define-prose-global-effect alpha '(100 100))
+#+end_src
 
 This function is for calculating the window width
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb
@@ -282,7 +272,7 @@ Here I'm going to collect the margin functions
     "Buffer local factor affecting `prose--set-margins'")
 
   (defun prose--set-margins ()
-    "Set darkroom margins for currently selected window"
+    "Set prose-mode margins for currently selected window"
     (let* ((window-configuration-change-hook nil)
            (window (selected-window))
            (margins (prose--compute-margins window)))
@@ -363,7 +353,8 @@ Now here are the activation functions
               (with-selected-window w
                 (prose--set-margins)))
           (get-buffer-window-list (current-buffer))))
-
+#+end_src
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb 
   (defun prose--leave ()
     "Undo the effects of `prose--enter'."
     (mapc #'(lambda (pair)
@@ -385,11 +376,8 @@ Now here are the activation functions
           (t
            ;; for clarity, don't do anything
            )))
-
   (declare-function prose-tentative-mode "prose" t)
 #+end_src
-
-And finally, the actual definition of the minor modes
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb 
   ;;;###autoload
   (define-minor-mode prose-mode
@@ -398,23 +386,26 @@ And finally, the actual definition of the minor modes
   view. The buffer margins are set so that text is centered on
   screen. Text size is increased (display engine allowing) by
   `prose-text-scale-increase'." nil nil nil
-    (when prose-tentative-mode
-      (display-warning
-       'prose
-       (concat "Turning off `prose-tentative-mode' first. "
-               "It doesn't go with `prose-mode'.")
-       (let ((prose-mode nil))
-         (prose-tentative-mode -1))))
-    (cond (prose-mode
-           (prose--enter)
-           (add-hook 'window-configuration-change-hook 'prose--set-margins
-                     t t))
-          (t
-           (prose--leave)
-           (remove-hook 'window-configuration-change-hook 'prose--set-margins
-                        t))))
+  (when prose-tentative-mode
+    (display-warning
+     'prose
+     (concat "Turning off `prose-tentative-mode' first. "
+             "It doesn't go with `prose-mode'.")
+     (let ((prose-mode nil))
+       (prose-tentative-mode -1))))
+  (cond (prose-mode
+         (prose--enter)
+         (add-hook 'window-configuration-change-hook 'prose--set-margins
+                   t t))
+        (t
+         (prose--leave)
+         (remove-hook 'window-configuration-change-hook 'prose--set-margins
+                      t))))
+#+end_src
 
-  ;;;###autoload
+Enters prose mode when all other windows are deleted. Just to keep things neat.
+
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb 
   (define-minor-mode prose-tentative-mode
     "Enters `prose-mode' when all other windows are deleted."
     nil " Room" prose-mode-map
@@ -442,24 +433,27 @@ And finally, the actual definition of the minor modes
            (prose--enter-or-leave))
           (t
            (prose--leave))))
+#+end_src
 
-  ;; sets up toggle-prose-mode
+Here we create our toggle and assign it a keybinding. 
+
+#+begin_src emacs-lisp :tangle "~/.emacs.d/private/prose/funcs.el" :noweb 
   (defun prose/toggle-prose-mode ()
     "Toggle extra settings for distraction free writing."
     (interactive)
     (cond ((bound-and-true-p prose-mode)
            (widen)
-           (prose-mode -1)
-           (winner-redo))
+           (setq line-spacing nil)
+           (prose-mode 0))
           (t
            (outline-mark-subtree)
            (narrow-to-region (region-beginning)(region-end))
            (deactivate-mark)
-           (delete-other-windows)
            (prose-mode 1)
+           (prose-guess-margins)
+           (setq line-spacing 0.4)
            (message "happy writing"))))
   (evil-leader/set-key "tW" 'prose/toggle-prose-mode)
-
 #+end_src
 
 *** Fill and Unfill paragraph
