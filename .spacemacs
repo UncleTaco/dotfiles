@@ -24,7 +24,7 @@
           git-gutter-use-fringe t)
      markdown
      org
-     org-jira
+     ;;org-jira
      osx
      personal
      prose
@@ -69,13 +69,8 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-<<<<<<< HEAD
-   dotspacemacs-themes '(minimal
-                         minimal-light)
-=======
-   dotspacemacs-themes '(apropospriate-light
-                         apropospriate-dark)
->>>>>>> a4fbdd788dca2a0037dac3db73dba01bfddf55f9
+   dotspacemacs-themes '(spacemacs-light
+                         spacemacs-dark)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -162,63 +157,108 @@ before layers configuration."
   ;;           '(if (/= (cadr (frame-parameter (selected-frame) 'alpha)) 100)
   ;;                (spacemacs/toggle-transparent-frame)))
   ;; org-mode key bindings ------------------------------------------------------
-  (eval-after-load "org"
-    '(progn
-       (org-babel-load-file "~/.emacs.d/private/prose/README.org")
-       (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")))
-
 (defun dotspacemacs/config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-
- ) )
+  (add-to-list 'org-modules 'org-habit)
+  (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
+  (setq org-agenda-custom-commands
+        '(("a" "Agenda"
+           ((agenda "" nil)
+            (alltodo ""
+                     ((org-agenda-overriding-header "Tasks to Refile")
+                      (org-agenda-files '("~/Dropbox/org/inbox.org"))
+                      (org-agenda-skip-function
+                       '(oh/agenda-skip :headline-if-restricted-and '(todo)))))
+            (tags-todo "-CANCELLED/!-HOLD-WAITING"
+                       ((org-agenda-overriding-header "Stuck Projects")
+                        (org-agenda-skip-function
+                         '(oh/agenda-skip :subtree-if '(inactive non-project non-stuck-project habit scheduled deadline)))))
+            (tags-todo "-WAITING-CANCELLED/!NEXT"
+                       ((org-agenda-overriding-header "Next Tasks")
+                        (org-agenda-skip-function
+                         '(oh/agenda-skip :subtree-if '(inactive project habit scheduled deadline)))
+                        (org-tags-match-list-sublevels t)
+                        (org-agenda-sorting-strategy '(todo-state-down effort-up category-keep))))
+            (tags-todo "-CANCELLED/!-NEXT-HOLD-WAITING"
+                       ((org-agenda-overriding-header "Available Tasks")
+                        (org-agenda-skip-function
+                         '(oh/agenda-skip :headline-if '(project)
+                                          :subtree-if '(inactive habit scheduled deadline)
+                                          :subtree-if-unrestricted-and '(subtask)
+                                          :subtree-if-restricted-and '(single-task)))
+                        (org-agenda-sorting-strategy '(category-keep))))
+            (tags-todo "-CANCELLED/!"
+                       ((org-agenda-overriding-header "Currently Active Projects")
+                        (org-agenda-skip-function
+                         '(oh/agenda-skip :subtree-if '(non-project stuck-project inactive habit)
+                                          :headline-if-unrestricted-and '(subproject)
+                                          :headline-if-restricted-and '(top-project)))
+                        (org-agenda-sorting-strategy '(category-keep))))
+            (tags-todo "-CANCELLED/!WAITING|HOLD"
+                       ((org-agenda-overriding-header "Waiting and Postponed Tasks")
+                        (org-agenda-skip-function
+                         '(oh/agenda-skip :subtree-if '(project habit))))))
+           nil)
+          ("r" "Tasks to Refile" alltodo ""
+           ((org-agenda-overriding-header "Tasks to Refile")
+            (org-agenda-files '("~/Dropbox/org/inbox.org"))))
+          ("#" "Stuck Projects" tags-todo "-CANCELLED/!-HOLD-WAITING"
+           ((org-agenda-overriding-header "Stuck Projects")
+            (org-agenda-skip-function
+             '(oh/agenda-skip :subtree-if '(inactive non-project non-stuck-project
+                                                     habit scheduled deadline)))))
+          ("n" "Next Tasks" tags-todo "-WAITING-CANCELLED/!NEXT"
+           ((org-agenda-overriding-header "Next Tasks")
+            (org-agenda-skip-function
+             '(oh/agenda-skip :subtree-if '(inactive project habit scheduled deadline)))
+            (org-tags-match-list-sublevels t)
+            (org-agenda-sorting-strategy '(todo-state-down effort-up category-keep))))
+          ("R" "Tasks" tags-todo "-CANCELLED/!-NEXT-HOLD-WAITING"
+           ((org-agenda-overriding-header "Available Tasks")
+            (org-agenda-skip-function
+             '(oh/agenda-skip :headline-if '(project)
+                              :subtree-if '(inactive habit scheduled deadline)
+                              :subtree-if-unrestricted-and '(subtask)
+                              :subtree-if-restricted-and '(single-task)))
+            (org-agenda-sorting-strategy '(category-keep))))
+          ("p" "Projects" tags-todo "-CANCELLED/!"
+           ((org-agenda-overriding-header "Currently Active Projects")
+            (org-agenda-skip-function
+             '(oh/agenda-skip :subtree-if '(non-project inactive habit)))
+            (org-agenda-sorting-strategy '(category-keep))
+            (org-tags-match-list-sublevels 'indented)))
+          ("w" "Waiting Tasks" tags-todo "-CANCELLED/!WAITING|HOLD"
+           ((org-agenda-overriding-header "Waiting and Postponed Tasks")
+            (org-agenda-skip-function '(oh/agenda-skip :subtree-if '(project habit)))))))
+  (org-babel-load-file "~/.emacs.d/private/prose/README.org")
+  (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")))
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(TeX-engine (quote default))
- '(ahs-case-fold-search nil)
- '(ahs-default-range (quote ahs-range-whole-buffer))
- '(ahs-idle-interval 0.25)
- '(ahs-idle-timer 0 t)
- '(ahs-inhibit-face-list nil)
- '(org-agenda-custom-commands
-   (quote
-    (("d" todo "DELEGATED" nil)
-     ("c" todo "DONE|DEFERRED|CANCELLED" nil)
-     ("w" todo "WAITING" nil)
-     ("W" agenda ""
-      ((org-agenda-ndays 21)))
-     ("A" agenda ""
-      ((org-agenda-skip-function
-        (lambda nil
-          (org-agenda-skip-entry-if
-           (quote notregexp)
-           "\\=.*\\[#A\\]")))
-       (org-agenda-ndays 1)
-       (org-agenda-overriding-header "Today's Priority #A tasks: ")))
-     ("u" alltodo ""
-      ((org-agenda-skip-function
-        (lambda nil
-          (org-agenda-skip-entry-if
-           (quote scheduled)
-           (quote deadline)
-           (quote regexp)
-           "
-]+>")))
-       (org-agenda-overriding-header "Unscheduled TODO entries: "))))))
- '(org-agenda-files (quote ("~/Dropbox/org/gtd/main.org")))
  '(org-agenda-ndays 7)
+ '(org-deadline-warning-days 14)
  '(org-agenda-show-all-dates t)
  '(org-agenda-skip-deadline-if-done t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-start-on-weekday nil)
- '(org-deadline-warning-days 14)
- '(org-default-notes-file "~/Dropbox/org/journal.org")
- '(org-fast-tag-selection-single-key (quote expert))
  '(org-reverse-note-order t)
- '(ring-bell-function (quote ignore) t))
+ '(org-fast-tag-selection-single-key (quote expert))
+ '(org-agenda-custom-commands
+   (quote (("d" todo "DELEGATED" nil)
+           ("c" todo "DONE|DEFERRED|CANCELLED" nil)
+           ("w" todo "WAITING" nil)
+           ("W" agenda "" ((org-agenda-ndays 21)))
+           ("A" agenda ""
+            ((org-agenda-skip-function
+              (lambda nil
+                (org-agenda-skip-entry-if (quote notregexp) "\\=.*\\[#A\\]")))
+             (org-agenda-ndays 1)
+             (org-agenda-overriding-header "Today's Priority #A tasks: ")))
+           ("u" alltodo ""
+            ((org-agenda-skip-function
+              (lambda nil
+                (org-agenda-skip-entry-if (quote scheduled) (quote deadline)
+                                          (quote regexp) "\n]+>")))
+             (org-agenda-overriding-header "Unscheduled TODO entries: ")))))))
