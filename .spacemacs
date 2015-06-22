@@ -24,7 +24,7 @@
      latex
      markdown
      org
-     ;;org-jira
+     org-jira
      osx
      personal
      prose
@@ -69,8 +69,8 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-light
-                         spacemacs-dark)
+   dotspacemacs-themes '(minimal-light
+                         minimal-dark)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -161,14 +161,15 @@ before layers configuration."
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+  (powerline-vim-theme)
   (require 'org-habit)
   (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
+  (load-file "~/.emacs.d/private/personal/org-helpers.el")
   (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
   (require 'org-helpers)
   (load-file "~/.emacs.d/private/prose/darkroom.el")
   (require 'darkroom)
   (org-babel-load-file "~/.emacs.d/private/prose/README.org")
-  (setq org-agenda-restore-windows-after-quit t)
   (setq org-agenda-custom-commands
         '(("a" "Agenda"
            ((agenda "" nil)
@@ -241,28 +242,55 @@ layers configuration."
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ahs-case-fold-search nil)
+ '(ahs-default-range (quote ahs-range-whole-buffer))
+ '(ahs-idle-interval 0.25)
+ '(ahs-idle-timer 0 t)
+ '(ahs-inhibit-face-list nil)
+ '(org-agenda-custom-commands
+   (quote
+    (("d" todo "DELEGATED" nil)
+     ("c" todo "DONE|DEFERRED|CANCELLED" nil)
+     ("w" todo "WAITING" nil)
+     ("W" agenda ""
+      ((org-agenda-ndays 21)))
+     ("A" agenda ""
+      ((org-agenda-skip-function
+        (lambda nil
+          (org-agenda-skip-entry-if
+           (quote notregexp)
+           "\\=.*\\[#A\\]")))
+       (org-agenda-ndays 1)
+       (org-agenda-overriding-header "Today's Priority #A tasks: ")))
+     ("u" alltodo ""
+      ((org-agenda-skip-function
+        (lambda nil
+          (org-agenda-skip-entry-if
+           (quote scheduled)
+           (quote deadline)
+           (quote regexp)
+           "
+]+>")))
+       (org-agenda-overriding-header "Unscheduled TODO entries: "))))))
+ '(org-agenda-files
+   (quote
+    ("c:/Users/ejackson.ATLASRFID/Dropbox/org/groceries.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/inbox.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/journal.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/gtd/main.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/gtd/private.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/notes/test_thoughts.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/writing/project1/lionPrincess.org")))
  '(org-agenda-ndays 7)
- '(org-deadline-warning-days 14)
  '(org-agenda-show-all-dates t)
  '(org-agenda-skip-deadline-if-done t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-start-on-weekday nil)
- '(org-reverse-note-order t)
+ '(org-deadline-warning-days 14)
  '(org-fast-tag-selection-single-key (quote expert))
- '(org-agenda-custom-commands
-   (quote (("d" todo "DELEGATED" nil)
-           ("c" todo "DONE|DEFERRED|CANCELLED" nil)
-           ("w" todo "WAITING" nil)
-           ("W" agenda "" ((org-agenda-ndays 21)))
-           ("A" agenda ""
-            ((org-agenda-skip-function
-              (lambda nil
-                (org-agenda-skip-entry-if (quote notregexp) "\\=.*\\[#A\\]")))
-             (org-agenda-ndays 1)
-             (org-agenda-overriding-header "Today's Priority #A tasks: ")))
-           ("u" alltodo ""
-            ((org-agenda-skip-function
-              (lambda nil
-                (org-agenda-skip-entry-if (quote scheduled) (quote deadline)
-                                          (quote regexp) "\n]+>")))
-             (org-agenda-overriding-header "Unscheduled TODO entries: ")))))))
+ '(org-reverse-note-order t)
+ '(ring-bell-function (quote ignore) t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

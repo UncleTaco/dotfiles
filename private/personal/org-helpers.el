@@ -1,3 +1,44 @@
+;;; summered-emacs.el --- Summered for Emacs.
+
+;; Copyright (C) 2012 Arthur Leonard Andersen
+
+;; Author: Arthur Leonard Andersen <leoc.git@gmail.com>
+;; URL: http://github.com/leoc/org-helpers
+;; Version: 0.1.0
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;
+;;    org-helpers provide many methods to configure org-mode easily
+;;  for the GTD way of organizing tasks.
+;;
+;;; Installation:
+;;
+;;    Just put org-helpers.el in a directory that´s in you load-path
+;;  and `(require 'org-helpers)` in your `init.el`.
+;;
+;;     Afterwards you can use the org-helpers functions to configure
+;;   your org-mode to your wishes.
+;;
+;;; Credits
+;;
+;;    Most code is based on the wonderful article from
+;;  norang. (http://doc.norang.ca/org-mode.html)
+;;  Many thanks to Bernt Hansen for a well-founded approach!
+;;
+;;; Code
 
 (defmacro oh/agenda-type (&rest types)
   `(or ,@(mapcar '(lambda (item)
@@ -313,3 +354,4 @@ to TODO otherwise."
     (org-todo (if (= c-off 0) "DONE" "TODO"))))
 
 (provide 'org-helpers)
+

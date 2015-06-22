@@ -20,6 +20,7 @@
 (setq org-agenda-files '("~/Dropbox/org/"
                          "~/Dropbox/org/gtd"
                          "~/Dropbox/org/notes"
+                         "~/Dropbox/org/.org-jira"
                          "~/Dropbox/org/writing/project1"
                          ))
 ;; The habit package for org is awesome!
