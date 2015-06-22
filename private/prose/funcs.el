@@ -325,22 +325,21 @@ screen. Text size is increased (display engine allowing) by
         (t
          (prose--leave))))
 
-(defun prose/toggle-prose-mode ()
+(defun prose/toggle-darkroom-mode ()
   "Toggle extra settings for distraction free writing."
   (interactive)
-  (cond ((bound-and-true-p prose-mode)
+  (cond ((bound-and-true-p darkroom-mode)
          (widen)
          (setq line-spacing nil)
-         (prose-mode 0))
+         (darkroom-mode 0))
         (t
          (outline-mark-subtree)
          (narrow-to-region (region-beginning)(region-end))
+         (setq line-spacing 0.5)
          (deactivate-mark)
-         (prose-mode 1)
-         (prose-guess-margins)
-         (setq line-spacing 0.4)
+         (darkroom-mode 1)
          (message "happy writing"))))
-(evil-leader/set-key "tW" 'prose/toggle-prose-mode)
+(evil-leader/set-key "tW" 'prose/toggle-darkroom-mode)
 
 (defun my/unfill-paragraph (&optional region)
   "Takes a multi-line paragraph and makes it into a single line of text"

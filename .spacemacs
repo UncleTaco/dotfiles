@@ -16,12 +16,12 @@
      ;; Example of useful layers you may want to use right away
      ;; Uncomment a layer name and press C-c C-c to install it
      ;; --------------------------------------------------------
-     auctex
      auto-completion
      better-defaults
      clojure
      (git :variables
           git-gutter-use-fringe t)
+     latex
      markdown
      org
      ;;org-jira
@@ -161,8 +161,14 @@ before layers configuration."
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-  (add-to-list 'org-modules 'org-habit)
+  (require 'org-habit)
   (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
+  (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
+  (require 'org-helpers)
+  (load-file "~/.emacs.d/private/prose/darkroom.el")
+  (require 'darkroom)
+  (org-babel-load-file "~/.emacs.d/private/prose/README.org")
+  (setq org-agenda-restore-windows-after-quit t)
   (setq org-agenda-custom-commands
         '(("a" "Agenda"
            ((agenda "" nil)
@@ -231,9 +237,7 @@ layers configuration."
             (org-tags-match-list-sublevels 'indented)))
           ("w" "Waiting Tasks" tags-todo "-CANCELLED/!WAITING|HOLD"
            ((org-agenda-overriding-header "Waiting and Postponed Tasks")
-            (org-agenda-skip-function '(oh/agenda-skip :subtree-if '(project habit)))))))
-  (org-babel-load-file "~/.emacs.d/private/prose/README.org")
-  (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")))
+            (org-agenda-skip-function '(oh/agenda-skip :subtree-if '(project habit)))))))))
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
