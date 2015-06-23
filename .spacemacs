@@ -70,7 +70,7 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(minimal-light
-                         minimal-dark)
+                         minimal)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -142,6 +142,9 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
    )
   ;; User initialization goes here
+  (custom-set-faces
+   '(mode-line ((t (:foreground "#030303" :background "#bdbdbd" :box nil))))
+   '(mode-line-inactive ((t (:foreground "#f9f9f9" :background "#666666" :box nil)))))
   ;; Tab settings
   (setq tab-width 2
         indent-tabs-mode nil)
@@ -161,7 +164,10 @@ before layers configuration."
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-  (powerline-vim-theme)
+  (defvar powerline-color1)
+  (defvar powerline-color2)
+  (setq powerline-color1 "grey22")
+  (setq powerline-color2 "grey40")
   (require 'org-habit)
   (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
   (load-file "~/.emacs.d/private/personal/org-helpers.el")

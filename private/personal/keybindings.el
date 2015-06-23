@@ -1,7 +1,8 @@
 
 ;; Org-mode keybindings
 (evil-leader/set-key "oo" 'open-org-dir)
-(evil-leader/set-key "oa" 'my-org-archive-done-tasks)
+(evil-leader/set-key "oa" 'org-agenda)
+(evil-leader/set-key "oA" 'my-org-archive-done-tasks)
 (evil-leader/set-key "og" 'gtd)
 (evil-leader/set-key "oj" 'journal)
 (evil-leader/set-key "ot" 'org-capture)
