@@ -34,7 +34,6 @@
      themes-megapack
      ruby
      vagrant
-     vim-powerline
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -70,7 +69,7 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(minimal-light
+   dotspacemacs-themes '(leuven
                          minimal)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -162,15 +161,43 @@ before layers configuration."
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-  (require 'org-habit)
+  (add-hook 'doc-view-mode-hook 'auto-revert-mode)
   (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
+  (require 'org-habit)
   (load-file "~/.emacs.d/private/personal/org-helpers.el")
   (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
   (require 'org-helpers)
   (load-file "~/.emacs.d/private/prose/darkroom.el")
   (require 'darkroom)
   (org-babel-load-file "~/.emacs.d/private/prose/README.org")
-  (setq org-agenda-custom-commands
+  ;; active Babel languages
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)
+     (dot . t)
+     (haskell . t)
+     (java . t)
+     (js . t)
+     (latex . t)
+     (ruby . t)
+     (sh . t)
+     (emacs-lisp . t)
+     (C . t)
+     ))
+  (setq org-confirm-babel-evaluate nil)
+  (setq jiralib-url "XXXXXXXX")
+  (setq org-clock-persist 'history)
+  (setq  org-clock-idle-time 10)
+  (org-clock-persistence-insinuate)
+  ;; display teh tags farther right
+  (setq org-agenda-tags-column -102)
+  ;; display the org-habit graph right of the tags
+  (setq org-habit-graph-column 102)
+  (setq org-habit-following-days 7)
+  (setq org-habit-preceding-days 21)
+  (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
+  (setq org-clock-continuously t)
+(setq org-agenda-custom-commands
         '(("a" "Agenda"
            ((agenda "" nil)
             (alltodo ""
@@ -246,45 +273,25 @@ layers configuration."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(TeX-engine (quote xetex))
  '(ahs-case-fold-search nil)
  '(ahs-default-range (quote ahs-range-whole-buffer))
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
- '(org-agenda-custom-commands
-   (quote
-    (("d" todo "DELEGATED" nil)
-     ("c" todo "DONE|DEFERRED|CANCELLED" nil)
-     ("w" todo "WAITING" nil)
-     ("W" agenda ""
-      ((org-agenda-ndays 21)))
-     ("A" agenda ""
-      ((org-agenda-skip-function
-        (lambda nil
-          (org-agenda-skip-entry-if
-           (quote notregexp)
-           "\\=.*\\[#A\\]")))
-       (org-agenda-ndays 1)
-       (org-agenda-overriding-header "Today's Priority #A tasks: ")))
-     ("u" alltodo ""
-      ((org-agenda-skip-function
-        (lambda nil
-          (org-agenda-skip-entry-if
-           (quote scheduled)
-           (quote deadline)
-           (quote regexp)
-           "
-]+>")))
-       (org-agenda-overriding-header "Unscheduled TODO entries: "))))))
+ '(expand-region-contract-fast-key "V")
+ '(expand-region-reset-fast-key "r")
  '(org-agenda-files
    (quote
     ("c:/Users/ejackson.ATLASRFID/Dropbox/org/groceries.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/inbox.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/journal.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/gtd/main.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/gtd/private.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/notes/test_thoughts.org" "c:/Users/ejackson.ATLASRFID/Dropbox/org/writing/project1/lionPrincess.org")))
- '(org-agenda-ndays 7)
- '(org-agenda-show-all-dates t)
- '(org-agenda-skip-deadline-if-done t)
- '(org-agenda-skip-scheduled-if-done t)
- '(org-agenda-start-on-weekday nil)
- '(org-deadline-warning-days 14)
- '(org-fast-tag-selection-single-key (quote expert))
- '(org-reverse-note-order t)
+ '(org-agenda-restore-windows-after-quit nil)
+ '(org-agenda-window-setup (quote current-window))
+ '(preview-auto-cache-preamble (quote ask))
  '(ring-bell-function (quote ignore) t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
