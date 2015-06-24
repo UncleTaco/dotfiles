@@ -112,28 +112,6 @@ I use two models for keywords here. The first is Tony Ballantyne's writing
 sequences, the second one is a set of sequences that will be used generally in
 org-mode. Its best to collect all of the todo stuff together, for convenience,
 and because you can only do one setq.
-#+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/config.el" :noweb
-  (setq org-todo-keywords
-        (quote ((sequence "TODO(t!)"  "NEXT(n!)" "STARTED(s!)" "APPT(a!)" "|" "DONE(d!)")
-                (sequence "REPEAT(r)"  "WAITING(w!)" "HOLD(h!)" "|"  "PAUSED(p@/!)" "CANCELLED(c@/!)" )
-                (sequence "IDEA(i!)" "MAYBE(y!)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
-                )))
-#+end_src
-** DONE org-refile settings
-CLOSED: [2015-06-15 Mon 21:45]
-- State "DONE"       from "TODO"       [2015-06-15 Mon 21:45]
-Add completion... Hmm.
-#+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/config.el" :noweb
-  ;Use IDO for both buffer and file completion and ido-everywhere to t
-  (setq org-completion-use-ido t)
-  (setq ido-everywhere t)
-  (setq ido-max-directory-size 100000)
-  (ido-mode (quote both))
-
-  ; Use the current window when visiting files and buffers with ido
-  (setq ido-default-file-method 'selected-window)
-  (setq ido-default-buffer-method 'selected-window)
-#+end_src
 And lets set some refile targets.
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/config.el" :noweb
   ;; Quick searches in org mode
@@ -167,17 +145,6 @@ in my dropbox, I'd prefer to keep my writing files under another form of source
 control, particularly so I can revert to a previous version if something goes
 horribly wrong. Its overkill, yes, but worth it.
 
-State tag triggers.
-#+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/config.el" :noweb
-  (setq org-todo-state-tags-triggers
-        (quote (("CANCELLED" ("CANCELLED" . t))
-                ("WAITING" ("WAITING" . t))
-                ("HOLD" ("WAITING") ("HOLD" . t))
-                (done ("WAITING") ("HOLD"))
-                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-#+end_src
 Evil-leader keybindings
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/keybindings.el" :noweb
   ;; Org-mode keybindings
@@ -185,7 +152,7 @@ Evil-leader keybindings
   (evil-leader/set-key "oa" 'org-agenda)
   (evil-leader/set-key "oA" 'my-org-archive-done-tasks)
   (evil-leader/set-key "og" 'gtd)
-  (evil-leader/set-key "oj" 'journal)
+  (evil-leader/set-key "oJ" 'journal)
   (evil-leader/set-key "ot" 'org-capture)
   (evil-leader/set-key "on" 'notes)
   (evil-leader/set-key "oG" 'groceries)
@@ -201,15 +168,5 @@ Evil-leader keybindings
 
 #+end_src
 Mode defaults for agenda
-#+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/keybindings.el" :noweb
-  (defun custom-org-agenda-mode-defaults ()
-    (org-defkey org-agenda-mode-map "W" 'oh/agenda-remove-restriction)
-    (org-defkey org-agenda-mode-map "N" 'oh/agenda-restrict-to-subtree)
-    (org-defkey org-agenda-mode-map "P" 'oh/agenda-restrict-to-project)
-    (org-defkey org-agenda-mode-map "q" 'bury-buffer)
-    (org-defkey org-agenda-mode-map "I" 'org-clock-in)
-    (org-defkey org-agenda-mode-map "O" 'org-clock-out)
-    )
-#+end_src
 ** TODO org-tags
 

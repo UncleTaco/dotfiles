@@ -27,22 +27,6 @@
 ;; Ifttt auto appends .txt to filenames for dropbox append to file action
 (add-to-list 'auto-mode-alist '("\\Dropbox/org/.*\.txt\\'" . org-mode))
 
-(setq org-todo-keywords
-      (quote ((sequence "TODO(t!)"  "NEXT(n!)" "STARTED(s!)" "APPT(a!)" "|" "DONE(d!)")
-              (sequence "REPEAT(r)"  "WAITING(w!)" "HOLD(h!)" "|"  "PAUSED(p@/!)" "CANCELLED(c@/!)" )
-              (sequence "IDEA(i!)" "MAYBE(y!)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
-              )))
-
-;Use IDO for both buffer and file completion and ido-everywhere to t
-(setq org-completion-use-ido t)
-(setq ido-everywhere t)
-(setq ido-max-directory-size 100000)
-(ido-mode (quote both))
-
-; Use the current window when visiting files and buffers with ido
-(setq ido-default-file-method 'selected-window)
-(setq ido-default-buffer-method 'selected-window)
-
 ;; Quick searches in org mode
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
 (setq org-refile-targets (quote ((nil :maxlevel . 9)
@@ -55,12 +39,3 @@
 
 ; Allow refile to create parent tasks with confirmation
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
-
-(setq org-todo-state-tags-triggers
-      (quote (("CANCELLED" ("CANCELLED" . t))
-              ("WAITING" ("WAITING" . t))
-              ("HOLD" ("WAITING") ("HOLD" . t))
-              (done ("WAITING") ("HOLD"))
-              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))

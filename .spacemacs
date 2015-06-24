@@ -70,7 +70,7 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(leuven
-                         minimal)
+                         material)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -149,7 +149,6 @@ before layers configuration."
   (setq whitespace-action '(auto-cleanup))
   (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
   ;; Powerline theme
-  (setq jiralib-url "https://atlasrfid.atlassian.net:443")
   (setq visual-line-mode 1)
   (setq-default git-enable-github-support t)
   ;; turn off transparency on fullscreen
@@ -164,10 +163,8 @@ layers configuration."
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
   (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
   (require 'org-habit)
-  (load-file "~/.emacs.d/private/personal/org-helpers.el")
   (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
-  (require 'org-helpers)
-  (load-file "~/.emacs.d/private/prose/darkroom.el")
+  (add-to-list 'load-path "~/.emacs.d/private/prose/")
   (require 'darkroom)
   (org-babel-load-file "~/.emacs.d/private/prose/README.org")
   ;; active Babel languages
@@ -195,9 +192,40 @@ layers configuration."
   (setq org-habit-graph-column 102)
   (setq org-habit-following-days 7)
   (setq org-habit-preceding-days 21)
+
+  (add-to-list 'load-path "~/.emacs.d/private/personal/")
+
+  (require 'org-helpers)
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)"  "NEXT(n)" "STARTED(s)" "APPT(a)" "|" "DONE(d)")
+                (sequence "REPEAT(r)"  "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" )
+                (sequence "IDEA(i)" "MAYBE(y)" "STAGED(s)" "WORKING(k)" "|" "USED(u!/@)")
+                )))
+
+
+  (setq org-todo-state-tags-triggers
+        (quote (("CANCELLED" ("CANCELLED" . t))
+                ("WAITING" ("WAITING" . t))
+                ("HOLD" ("WAITING") ("HOLD" . t))
+                (done ("WAITING") ("HOLD"))
+                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+
+  (defun custom-org-agenda-mode-defaults ()
+    (org-defkey org-agenda-mode-map "W" 'oh/agenda-remove-restriction)
+    (org-defkey org-agenda-mode-map "N" 'oh/agenda-restrict-to-subtree)
+    (org-defkey org-agenda-mode-map "P" 'oh/agenda-restrict-to-project)
+    (org-defkey org-agenda-mode-map "q" 'bury-buffer)
+    (org-defkey org-agenda-mode-map "I" 'org-clock-in)
+    (org-defkey org-agenda-mode-map "O" 'org-clock-out)
+    )
+
   (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
+
   (setq org-clock-continuously t)
-(setq org-agenda-custom-commands
+  (setq org-agenda-custom-commands
         '(("a" "Agenda"
            ((agenda "" nil)
             (alltodo ""
