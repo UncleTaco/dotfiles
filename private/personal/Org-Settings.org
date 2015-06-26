@@ -89,22 +89,6 @@ them for Inbox, Groceries, and Journal entries. Will add more later.
 ** DONE org-setup
 CLOSED: [2015-06-15 Mon 22:01]
 - State "DONE"       from "TODO"       [2015-06-15 Mon 22:01]
-#+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/config.el" :noweb
-  ;; Org settings
-  (setq fill-column 64)
-  (setq visual-line-mode nil)
-  (setq org-directory "~/Dropbox/org/")
-  (setq org-agenda-files '("~/Dropbox/org/"
-                           "~/Dropbox/org/gtd"
-                           "~/Dropbox/org/notes"
-                           "~/Dropbox/org/.org-jira"
-                           "~/Dropbox/org/writing/project1"
-                           ))
-  ;; The habit package for org is awesome!
-  ;; Ifttt auto appends .txt to filenames for dropbox append to file action
-  (add-to-list 'auto-mode-alist '("\\Dropbox/org/.*\.txt\\'" . org-mode))
-
-#+end_src
 ** DONE org-agenda keywords 
 CLOSED: [2015-06-15 Mon 20:37]
 - State "DONE"       from "TODO"       [2015-06-15 Mon 20:37]

@@ -13,20 +13,6 @@
         )
       )
 
-;; Org settings
-(setq fill-column 64)
-(setq visual-line-mode nil)
-(setq org-directory "~/Dropbox/org/")
-(setq org-agenda-files '("~/Dropbox/org/"
-                         "~/Dropbox/org/gtd"
-                         "~/Dropbox/org/notes"
-                         "~/Dropbox/org/.org-jira"
-                         "~/Dropbox/org/writing/project1"
-                         ))
-;; The habit package for org is awesome!
-;; Ifttt auto appends .txt to filenames for dropbox append to file action
-(add-to-list 'auto-mode-alist '("\\Dropbox/org/.*\.txt\\'" . org-mode))
-
 ;; Quick searches in org mode
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
 (setq org-refile-targets (quote ((nil :maxlevel . 9)

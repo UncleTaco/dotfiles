@@ -12,7 +12,6 @@
 
 (setq personal-packages
       '(
-        powerline-evil
         ;;package personals go here
         ))
 (defvar personal-excluded-packages '()
@@ -34,12 +33,10 @@
 (defun generate-org-settings ()
   "Generate org-mode settings"
   (interactive)
-  (find-file "~/.emacs.d/private/personal/Org-Settings.org"))
+  (find-file "~/.emacs.d/private/personal/Org-Settings.org")
+  (add-to-load-path "~/.emacs.d/private/personal/"))
 
-(defun personal/init-powerline-evil()
-  "new powerline themes"
-  (use-package powerline-evil
-    :defer t))
+
 (defun edit-personal-keybindings ()
   "Edit personal keybindings"
   (interactive)
