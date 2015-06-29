@@ -28,9 +28,9 @@
      org-jira
      osx
      personal
-     prose
+     ;;prose
      python
-     slime
+     ;;slime
      syntax-checking
      themes-megapack
      ruby
@@ -44,9 +44,10 @@
    ;; the list `dotspacemacs-configuration-layers'
    dotspacemacs-delete-orphan-packages t)
   (setq dotspacemacs-additional-packages '(
-                                           basic-theme
+                                           darkroom
+                                           olivetti
                                            tao-theme
-                                           )))
+                                           warm-night-theme)))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -76,8 +77,8 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         minimal
-                         minimal-light
+                        tao-yin
+                        tao-yang
                          )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -87,7 +88,7 @@ before layers configuration."
                                :size 14
                                :weight normal
                                :width normal
-                               :powerline-scale 1.3
+                               :powerline-scale 1.1
                                )
    ;; The leader key
    dotspacemacs-leader-key "SPC"
@@ -155,9 +156,6 @@ before layers configuration."
   ;; Whitespace settings
   (setq whitespace-action '(auto-cleanup))
   (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
-  ;; Powerline theme
-  (setq visual-line-mode 1)
-  (setq-default git-enable-github-support t)
 
 
 
@@ -167,14 +165,13 @@ before layers configuration."
 layers configuration."
     ;; turn off hl-line in org-mode
     ;; better powerline
-    ;; org-agenda stuff
     (add-hook 'doc-view-mode-hook 'auto-revert-mode)
     (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
     (add-hook 'org-mode-hook
               (lambda ()
                 (setq fill-column 64)
                 (setq visual-line-mode nil)
-                (auto-fill-mode t)))
+                (turn-on-auto-fill)))
 
     ;; Org-Settings
     (setq org-directory "~/Dropbox/org/")
@@ -187,7 +184,6 @@ layers configuration."
     (require 'org-habit)
     (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
     (add-to-list 'load-path "~/.emacs.d/private/prose/")
-    (require 'darkroom)
     (org-babel-load-file "~/.emacs.d/private/prose/README.org")
     ;; active Babel languages
     (org-babel-do-load-languages
@@ -203,25 +199,40 @@ layers configuration."
        (emacs-lisp . t)
        (C . t)
        ))
+    ;; org variables
+    (setq org-startup-indented t)
+    (setq org-hide-leading-stars t)
+    (setq org-odd-level-only nil)
+    (setq org-insert-heading-respect-content nil)
+    (setq org-startup-align-all-tables nil)
+    (setq org-log-into-drawer t)
     (setq org-confirm-babel-evaluate nil)
     (setq org-clock-persist 'history)
+    (setq org-tags-column 2)
+    (setq org-indent-mode-t)
+    (setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
     (setq  org-clock-idle-time 10)
     (org-clock-persistence-insinuate)
-    ;; display teh tags farther right
-    (setq org-agenda-tags-column -102)
     ;; display the org-habit graph right of the tags
-    (setq org-habit-graph-column 102)
     (setq org-habit-following-days 7)
     (setq org-habit-preceding-days 21)
-
+    ;; org-agenda mode settings.
+    (setq org-agenda-ndays 7)
+    (setq org-deadline-warning-days 14)
+    (setq org-agenda-show-all-dates t)
+    (setq org-agenda-skip-deadline-if-done t)
+    (setq org-agenda-skip-scheduled-if-done t)
+    (setq org-agenda-start-on-weekday nil)
+    (setq org-reverse-note-order t)
+    (global-auto-revert-mode t)
     (add-to-list 'load-path "~/.emacs.d/private/personal/")
 
     (require 'org-helpers)
 
     (setq org-todo-keywords
-          (quote ((sequence "TODO(t)"  "NEXT(n)" "STARTED(s)" "APPT(a)" "|" "DONE(d)")
-                  (sequence "REPEAT(r)"  "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" )
-                  (sequence "IDEA(i)" "MAYBE(y)" "STAGED(s)" "WORKING(k)" "|" "USED(u!/@)")
+          (quote ((sequence "TODO(t)"  "NEXT(n)" "STARTED(s!)" "APPT(a)" "|" "DONE(d!)")
+                  (sequence "REPEAT(r)"  "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@)" )
+                  (sequence "IDEA(i)" "MAYBE(y)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
                   )))
 
 
