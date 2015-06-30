@@ -77,25 +77,18 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                        tao-yin
-                        tao-yang
+                         tao-yin
+                         tao-yang
                          )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 14
-                               :weight normal
-                               :width normal
-                               :powerline-scale 1.1
-                               )
-   ;; The leader key
-   dotspacemacs-leader-key "SPC"
-   ;; The leader key accessible in `emacs state' and `insert state'
-   dotspacemacs-emacs-leader-key "M-m"
-   ;; Major mode leader key is a shortcut key which is the equivalent of
-   ;; pressing `<leader> m`. Set it to `nil` to disable it.
+			       :size 14
+			       :height normal
+			       :weight normal
+			       :powerline-scale 1.1)
    dotspacemacs-major-mode-leader-key ","
    ;; Major mode leader key accessible in `emacs state' and `insert state'
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
@@ -182,6 +175,7 @@ layers configuration."
                              "~/Dropbox/org/writing/project1"
                              ))
     (require 'org-habit)
+    (require 'ob-clojure)
     (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
     (add-to-list 'load-path "~/.emacs.d/private/prose/")
     (org-babel-load-file "~/.emacs.d/private/prose/README.org")
@@ -189,6 +183,7 @@ layers configuration."
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((R . t)
+       (clojure . t)
        (dot . t)
        (haskell . t)
        (java . t)
@@ -199,6 +194,19 @@ layers configuration."
        (emacs-lisp . t)
        (C . t)
        ))
+    ;; Let's have pretty source code blocks
+    (setq org-edit-src-content-indentation 0
+          org-src-tab-acts-natively t
+          org-src-fontify-natively t
+          org-confirm-babel-evaluate nil)
+
+    ;; Use cider as clojure backend
+    ;; Cider configuration
+    (setq nrepl-hide-special-buffers t
+          cider-repl-pop-to-buffer-on-connect nil
+          cider-popup-stacktraces nil
+          cider-repl-popup-stacktraces t)
+
     ;; org variables
     (setq org-startup-indented t)
     (setq org-hide-leading-stars t)
