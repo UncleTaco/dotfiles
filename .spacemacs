@@ -283,7 +283,7 @@ layers configuration."
     (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
 
     (setq org-clock-continuously t)
-    (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
+    (setq org-bullets-bullet-list '("■" "✕" "◯" "▶"))
     (setq org-agenda-custom-commands
           '(("a" "Agenda"
              ((agenda "" nil)
@@ -381,7 +381,6 @@ layers configuration."
  ;; If there is more than one, they won't work right.
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(hl-line ((t (:weight extra-bold))))
  '(mode-line ((t (:background "#9D9D9D" :foreground "#080808" :box (:line-width 1 :style released-button) :height 100))))
  '(mode-line-inactive ((t (:background "#3C3C3C" :foreground "#0E0E0E" :box (:line-width 1 :style released-button) :height 100))))
  '(org-block-background ((t (:background "#161616" :height 0.9))))
