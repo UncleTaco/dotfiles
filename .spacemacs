@@ -29,7 +29,7 @@
      osx
      personal
      ;;prose
-     python
+     ;;python
      ;;slime
      syntax-checking
      themes-megapack
@@ -46,7 +46,6 @@
   (setq dotspacemacs-additional-packages '(
                                            darkroom
                                            olivetti
-                                           tao-theme
                                            warm-night-theme)))
 
 (defun dotspacemacs/init ()
@@ -77,8 +76,8 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                        tao-yin
-                        tao-yang
+                         tao-yin
+                         tao-yang
                          )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -88,7 +87,7 @@ before layers configuration."
                                :size 14
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1
+                               :powerline-scale 1.3
                                )
    ;; The leader key
    dotspacemacs-leader-key "SPC"
@@ -165,6 +164,7 @@ before layers configuration."
 layers configuration."
     ;; turn off hl-line in org-mode
     ;; better powerline
+    (setq powerline-default-separator 'arrow)
     (add-hook 'doc-view-mode-hook 'auto-revert-mode)
     (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
     (add-hook 'org-mode-hook
@@ -205,14 +205,24 @@ layers configuration."
     (setq org-odd-level-only nil)
     (setq org-insert-heading-respect-content nil)
     (setq org-startup-align-all-tables nil)
-    (setq org-log-into-drawer t)
     (setq org-confirm-babel-evaluate nil)
     (setq org-clock-persist 'history)
     (setq org-tags-column 2)
     (setq org-indent-mode-t)
     (setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
     (setq  org-clock-idle-time 10)
+    ;; org-clocking
     (org-clock-persistence-insinuate)
+    (setq org-clock-history-length 23)
+    (setq org-clock-in-resume t)
+    (setq org-drawers (quote ("LOGBOOK" "PROPERTIES")))
+    (setq org-clock-into-drawer t)
+    (setq org-clock-out-remove-zero-time-clocks t)
+    (setq org-clock-out-when-done t)
+    (setq org-clock-persist t)
+    (setq org-clock-persist-query-resume nil)
+    (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+    (setq org-clock-report-include-clocking-task t)
     ;; display the org-habit graph right of the tags
     (setq org-habit-following-days 7)
     (setq org-habit-preceding-days 21)
@@ -226,11 +236,11 @@ layers configuration."
     (setq org-reverse-note-order t)
     (global-auto-revert-mode t)
     (add-to-list 'load-path "~/.emacs.d/private/personal/")
-
+    (setq org-stuck-projects (quote ("" nil nil "")))
     (require 'org-helpers)
 
     (setq org-todo-keywords
-          (quote ((sequence "TODO(t)"  "NEXT(n)" "STARTED(s!)" "APPT(a)" "|" "DONE(d!)")
+          (quote ((sequence "TODO(t)"  "NEXT(n!)" "APPT(a)" "|" "DONE(d!)")
                   (sequence "REPEAT(r)"  "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@)" )
                   (sequence "IDEA(i)" "MAYBE(y)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
                   )))
@@ -258,6 +268,7 @@ layers configuration."
     (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
 
     (setq org-clock-continuously t)
+    (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
     (setq org-agenda-custom-commands
           '(("a" "Agenda"
              ((agenda "" nil)
@@ -269,7 +280,10 @@ layers configuration."
               (tags-todo "-CANCELLED/!-HOLD-WAITING"
                          ((org-agenda-overriding-header "Stuck Projects")
                           (org-agenda-skip-function
-                           '(oh/agenda-skip :subtree-if '(inactive non-project non-stuck-project habit scheduled deadline)))))
+                           '(oh/agenda-skip :subtree-if
+                                            '(inactive non-project
+                                                       non-stuck-project habit scheduled
+                                                       deadline)))))
               (tags-todo "-WAITING-CANCELLED/!NEXT"
                          ((org-agenda-overriding-header "Next Tasks")
                           (org-agenda-skip-function
@@ -340,45 +354,20 @@ layers configuration."
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
- '(ansi-color-names-vector
-   ["#C2C2C2" "#161616" "#252525" "#080808" "#0E0E0E" "#161616" "#080808" "#080808"])
- '(custom-safe-themes
-   (quote
-    ("26614652a4b3515b4bbbb9828d71e206cc249b67c9142c06239ed3418eff95e2" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default)))
- '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
  '(fci-rule-color "#F0F0F0" t)
  '(org-agenda-window-setup (quote current-window))
  '(preview-auto-cache-preamble (quote ask))
- '(ring-bell-function (quote ignore) t)
- '(vc-annotate-background "#D9D9D9")
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#616161")
-     (40 . "#3C3C3C")
-     (60 . "#3C3C3C")
-     (80 . "#252525")
-     (100 . "#252525")
-     (120 . "#161616")
-     (140 . "#161616")
-     (160 . "#0E0E0E")
-     (180 . "#0E0E0E")
-     (200 . "#0E0E0E")
-     (220 . "#080808")
-     (240 . "#080808")
-     (260 . "#080808")
-     (280 . "#080808")
-     (300 . "#080808")
-     (320 . "#080808")
-     (340 . "#080808")
-     (360 . "#080808"))))
- '(vc-annotate-very-old-color "#161616"))
+ '(ring-bell-function (quote ignore) t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro" :foundry "nil" :slant normal :weight normal :height 141 :width normal))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(hl-line ((t (:weight extra-bold)))))
+ '(hl-line ((t (:weight extra-bold))))
+ '(mode-line ((t (:background "#9D9D9D" :foreground "#080808" :box (:line-width 1 :style released-button) :height 100))))
+ '(mode-line-inactive ((t (:background "#3C3C3C" :foreground "#0E0E0E" :box (:line-width 1 :style released-button) :height 100))))
+ '(org-block-background ((t (:background "#161616" :height 0.9))))
+ '(org-meta-line ((t (:foreground "#9D9D9D" :height 0.9)))))
