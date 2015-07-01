@@ -184,8 +184,6 @@ layers configuration."
     (require 'org-habit)
     (require 'ob-clojure)
     (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
-    (add-to-list 'load-path "~/.emacs.d/private/prose/")
-    (org-babel-load-file "~/.emacs.d/private/prose/README.org")
     ;; active Babel languages
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -381,7 +379,7 @@ layers configuration."
  ;; If there is more than one, they won't work right.
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(mode-line ((t (:background "#9D9D9D" :foreground "#080808" :box (:line-width 1 :style released-button) :height 100))))
- '(mode-line-inactive ((t (:background "#3C3C3C" :foreground "#0E0E0E" :box (:line-width 1 :style released-button) :height 100))))
+ '(mode-line ((t (:background "#9D9D9D" :foreground "#080808" :box (:line-width 1 :style released-button) :height 1.0))))
+ '(mode-line-inactive ((t (:background "#3C3C3C" :foreground "#0E0E0E" :box (:line-width 1 :style released-button) :height 1.0))))
  '(org-block-background ((t (:background "#161616" :height 0.9))))
  '(org-meta-line ((t (:foreground "#9D9D9D" :height 0.9)))))
