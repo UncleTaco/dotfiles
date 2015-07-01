@@ -182,6 +182,7 @@ layers configuration."
                              "~/Dropbox/org/writing/project1"
                              ))
     (require 'org-habit)
+    (require 'ob-clojure)
     (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
     (add-to-list 'load-path "~/.emacs.d/private/prose/")
     (org-babel-load-file "~/.emacs.d/private/prose/README.org")
@@ -189,6 +190,7 @@ layers configuration."
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((R . t)
+       (clojure . t)
        (dot . t)
        (haskell . t)
        (java . t)
@@ -199,6 +201,19 @@ layers configuration."
        (emacs-lisp . t)
        (C . t)
        ))
+    ;; Let's have pretty source code blocks
+    (setq org-edit-src-content-indentation 0
+          org-src-tab-acts-natively t
+          org-src-fontify-natively t
+          org-confirm-babel-evaluate nil)
+
+    ;; Use cider as clojure backend
+    ;; Cider configuration
+    (setq nrepl-hide-special-buffers t
+          cider-repl-pop-to-buffer-on-connect nil
+          cider-popup-stacktraces nil
+          cider-repl-popup-stacktraces t)
+
     ;; org variables
     (setq org-startup-indented t)
     (setq org-hide-leading-stars t)
