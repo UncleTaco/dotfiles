@@ -2,37 +2,37 @@
 (defun open-org-dir ()
   "Opens the org dir"
   (interactive)
-  (find-file "~/Dropbox/org/")
+  (find-file "~/org/")
   )
 (defun gtd-inbox ()
   "Open the gtd inbox"
   (interactive)
-  (find-file "~/Dropbox/org/inbox.org")
+  (find-file "~/org/inbox.org")
   )
 (defun gtd-inbox-txt ()
   "Open the gtd inbox"
   (interactive)
-  (find-file "~/Dropbox/org/inbox.org.txt")
+  (find-file "~/org/inbox.org.txt")
   )
 (defun gtd ()
   "Open GTD directory"
   (interactive)
-  (find-file "~/Dropbox/org/gtd/main.org")
+  (find-file "~/org/gtd/main.org")
   )
 (defun journal ()
   "Open Journal"
   (interactive)
-  (find-file "~/Dropbox/org/journal.org")
+  (find-file "~/org/journal.org")
   )
 (defun notes ()
   "Switch to my work dir."
   (interactive)
-  (find-file "~/Dropbox/org/notes/")
+  (find-file "~/org/notes/")
   )
 (defun groceries ()
   "Edit grocery list"
   (interactive)
-  (find-file "~/Dropbox/org/groceries.org")
+  (find-file "~/org/groceries.org")
   )
 
 (defun my-org-archive-done-tasks ()

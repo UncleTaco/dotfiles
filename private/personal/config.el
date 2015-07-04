@@ -1,14 +1,14 @@
 
-(setq org-directory "~/Dropbox/org/")
+(setq org-directory "~/org/")
 
 (setq org-capture-templates
-      '(("i" "Inbox" entry (file "~/Dropbox/org/inbox.org")
+      '(("i" "Inbox" entry (file "~/org/inbox.org")
          "** TODO %?\n %i\n %a")
-        ("t" "Todo" entry (file+headline "~/Dropbox/org/gtd/private.org" "Tasks")
+        ("t" "Todo" entry (file+headline "~/org/gtd/private.org" "Tasks")
          "* TODO %?\n %i\n %a")
-        ("g" "Groceries" entry (file+headline "~/Dropbox/org/groceries.org" "INBOX")
+        ("g" "Groceries" entry (file+headline "~/org/groceries.org" "INBOX")
          "* %?\n %i\n %a")
-        ("j" "Journal Entry" entry (file+datetree "~/Dropbox/org/journal.org")
+        ("j" "Journal Entry" entry (file+datetree "~/org/journal.org")
          "* %?\nEntered on %U\n %i\n %a")
         )
       )

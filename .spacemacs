@@ -4,7 +4,7 @@
 
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration."
-  (setq-default
+  (setq-default                         ;
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
@@ -19,9 +19,9 @@
      auto-completion
      better-defaults
      clojure
-     (git :variables
-          git-gutter-use-fringe t)
+     git
      github
+     ipython
      latex
      markdown
      org
@@ -29,12 +29,13 @@
      osx
      personal
      ;;prose
-     ;;python
+     python
      ;;slime
      syntax-checking
      themes-megapack
      ruby
      vagrant
+     version-control
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(
@@ -44,8 +45,9 @@
    ;; the list `dotspacemacs-configuration-layers'
    dotspacemacs-delete-orphan-packages t)
   (setq dotspacemacs-additional-packages '(
-                                           darkroom
+                                           hl-sentence
                                            olivetti
+                                           org-wc
                                            warm-night-theme)))
 
 (defun dotspacemacs/init ()
@@ -149,6 +151,8 @@ before layers configuration."
    ;; Not used for now.
    dotspacemacs-default-package-repository nil
    )
+  ;; magit status fullscreen
+  (setq-default git-magit-status-fullscreen t))
   ;; User initialization goes here
   (setq tab-width 2
         indent-tabs-mode nil)
@@ -156,13 +160,35 @@ before layers configuration."
   (setq whitespace-action '(auto-cleanup))
   (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
 
-
-
   (defun dotspacemacs/config ()
     "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-    ;; turn off hl-line in org-mode
+    ;; prose writing mode toggle
+    (defun my/toggle-writing-mode ()
+      "Toggle a distraction-free environment for writing"
+      (interactive)
+      (cond ((bound-and-true-p olivetti-mode)
+             (olivetti-toggle-hide-modeline)
+             (setq line-spacing nil)
+             (text-scale-set 0)
+             (menu-bar-mode 1)
+             (hl-line-mode 1)
+             (olivetti-mode -1)
+             (widen)
+             (toggle-frame-fullscreen))
+            (t
+             (toggle-frame-fullscreen)
+             (outline-mark-subtree)
+             (deactivate-mark)
+             (hl-line-mode -1)
+             (narrow-to-region (region-beginning)(region-end))
+             (text-scale-set 1)
+             (setq line-spacing 0.5)
+             (olivetti-mode 1)
+             (olivetti-toggle-hide-modeline)
+             (menu-bar-mode -1))))
+    (evil-leader/set-key "tW" 'my/toggle-writing-mode)
     ;; better powerline
     (setq powerline-default-separator 'arrow)
     (add-hook 'doc-view-mode-hook 'auto-revert-mode)
@@ -174,16 +200,14 @@ layers configuration."
                 (turn-on-auto-fill)))
 
     ;; Org-Settings
-    (setq org-directory "~/Dropbox/org/")
-    (setq org-agenda-files '("~/Dropbox/org/"
-                             "~/Dropbox/org/gtd"
-                             "~/Dropbox/org/notes"
-                             "~/Dropbox/org/.org-jira"
-                             "~/Dropbox/org/writing/project1"
+    (setq org-directory "~/org/")
+    (setq org-agenda-files '("~/org/"
+                             "~/org/gtd"
+                             "~/org/notes"
+                             "~/org/.org-jira"
+                             "~/org/writing/project1"
                              ))
     (require 'org-habit)
-    (require 'ob-clojure)
-    (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
     ;; active Babel languages
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -206,6 +230,8 @@ layers configuration."
           org-confirm-babel-evaluate nil)
 
     ;; Use cider as clojure backend
+    (require 'cider)
+    (setq org-babel-clojure-backend 'cider)
     ;; Cider configuration
     (setq nrepl-hide-special-buffers t
           cider-repl-pop-to-buffer-on-connect nil
@@ -277,17 +303,18 @@ layers configuration."
       (org-defkey org-agenda-mode-map "I" 'org-clock-in)
       (org-defkey org-agenda-mode-map "O" 'org-clock-out)
       )
+    (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
 
     (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
 
     (setq org-clock-continuously t)
-    (setq org-bullets-bullet-list '("■" "✕" "◯" "▶"))
+    (setq org-bullets-bullet-list '("⬜" "✕" "◯" "▷"))
     (setq org-agenda-custom-commands
           '(("a" "Agenda"
              ((agenda "" nil)
               (alltodo ""
                        ((org-agenda-overriding-header "Tasks to Refile")
-                        (org-agenda-files '("~/Dropbox/org/inbox.org"))
+                        (org-agenda-files '("~/org/inbox.org"))
                         (org-agenda-skip-function
                          '(oh/agenda-skip :headline-if-restricted-and '(todo)))))
               (tags-todo "-CANCELLED/!-HOLD-WAITING"
@@ -325,7 +352,7 @@ layers configuration."
              nil)
             ("r" "Tasks to Refile" alltodo ""
              ((org-agenda-overriding-header "Tasks to Refile")
-              (org-agenda-files '("~/Dropbox/org/inbox.org"))))
+              (org-agenda-files '("~/org/inbox.org"))))
             ("#" "Stuck Projects" tags-todo "-CANCELLED/!-HOLD-WAITING"
              ((org-agenda-overriding-header "Stuck Projects")
               (org-agenda-skip-function

@@ -27,37 +27,37 @@ are the six paths.
   (defun open-org-dir ()
     "Opens the org dir"
     (interactive)
-    (find-file "~/Dropbox/org/")
+    (find-file "~/org/")
     )
   (defun gtd-inbox ()
     "Open the gtd inbox"
     (interactive)
-    (find-file "~/Dropbox/org/inbox.org")
+    (find-file "~/org/inbox.org")
     )
   (defun gtd-inbox-txt ()
     "Open the gtd inbox"
     (interactive)
-    (find-file "~/Dropbox/org/inbox.org.txt")
+    (find-file "~/org/inbox.org.txt")
     )
   (defun gtd ()
     "Open GTD directory"
     (interactive)
-    (find-file "~/Dropbox/org/gtd/main.org")
+    (find-file "~/org/gtd/main.org")
     )
   (defun journal ()
     "Open Journal"
     (interactive)
-    (find-file "~/Dropbox/org/journal.org")
+    (find-file "~/org/journal.org")
     )
   (defun notes ()
     "Switch to my work dir."
     (interactive)
-    (find-file "~/Dropbox/org/notes/")
+    (find-file "~/org/notes/")
     )
   (defun groceries ()
     "Edit grocery list"
     (interactive)
-    (find-file "~/Dropbox/org/groceries.org")
+    (find-file "~/org/groceries.org")
     )
 
   (defun my-org-archive-done-tasks ()
@@ -68,20 +68,20 @@ are the six paths.
 
  Now to point the org files to the proper directory.
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/config.el" :noweb
-(setq org-directory "~/Dropbox/org/")
+(setq org-directory "~/org/")
 #+end_src
 Were also going to go ahead and define our capture templates here. I only have
 them for Inbox, Groceries, and Journal entries. Will add more later.
 
 #+begin_src emacs-lisp :tangle "~/.emacs.d/private/personal/config.el" :noweb
   (setq org-capture-templates
-        '(("i" "Inbox" entry (file "~/Dropbox/org/inbox.org")
+        '(("i" "Inbox" entry (file "~/org/inbox.org")
            "** TODO %?\n %i\n %a")
-          ("t" "Todo" entry (file+headline "~/Dropbox/org/gtd/private.org" "Tasks")
+          ("t" "Todo" entry (file+headline "~/org/gtd/private.org" "Tasks")
            "* TODO %?\n %i\n %a")
-          ("g" "Groceries" entry (file+headline "~/Dropbox/org/groceries.org" "INBOX")
+          ("g" "Groceries" entry (file+headline "~/org/groceries.org" "INBOX")
            "* %?\n %i\n %a")
-          ("j" "Journal Entry" entry (file+datetree "~/Dropbox/org/journal.org")
+          ("j" "Journal Entry" entry (file+datetree "~/org/journal.org")
            "* %?\nEntered on %U\n %i\n %a")
           )
         )
