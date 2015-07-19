@@ -19,36 +19,39 @@
      auto-completion
      better-defaults
      clojure
+     colors
+     emacs-lisp
      git
      github
-     ipython
+     ;;ipython-notebook
      latex
-     markdown
+     javascript
+     ;;markdown
      org
      org-jira
      osx
      personal
      ;;prose
-     python
+     ;;python
      ;;slime
      syntax-checking
      themes-megapack
-     ruby
-     vagrant
+     ;;ruby
+     ;;vagrant
      version-control
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(
+                                    hemisu-theme
                                     )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'
    dotspacemacs-delete-orphan-packages t)
   (setq dotspacemacs-additional-packages '(
-                                           hl-sentence
+                                           color-theme-approximate
                                            olivetti
-                                           org-wc
-                                           warm-night-theme)))
+                                           org-wc)))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -78,8 +81,8 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         tao-yin
-                         tao-yang
+                         hemisu-dark
+                         hemisu-light
                          )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -152,7 +155,7 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
    )
   ;; magit status fullscreen
-  (setq-default git-magit-status-fullscreen t))
+  (setq-default git-magit-status-fullscreen t)
   ;; User initialization goes here
   (setq tab-width 2
         indent-tabs-mode nil)
@@ -160,10 +163,23 @@ before layers configuration."
   (setq whitespace-action '(auto-cleanup))
   (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
 
+  ;; testing theme
+  (add-to-list 'load-path "~/Repositories/hemisu-theme")
+  (load "hemisu-light-theme")
+  (load "hemisu-dark-theme")
+  (load "hemisu-theme.el")
+  (require 'hemisu-theme)
+
+
   (defun dotspacemacs/config ()
     "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+    (if (not (display-graphic-p)) (set-background-color nil)())
+    (color-theme-approximate-on)
+    ;; IPython settings
+    (setq ein:use-auto-complete t)
+    (setq ein:use-smartrep t)
     ;; prose writing mode toggle
     (defun my/toggle-writing-mode ()
       "Toggle a distraction-free environment for writing"
@@ -223,16 +239,16 @@ layers configuration."
        (emacs-lisp . t)
        (C . t)
        ))
+    ;; Use cider as clojure backend
+    (setq org-babel-clojure-backend 'cider)
     ;; Let's have pretty source code blocks
-    (setq org-edit-src-content-indentation 0
+    (setq org-edit-src-content-indentation 2
           org-src-tab-acts-natively t
           org-src-fontify-natively t
           org-confirm-babel-evaluate nil)
 
-    ;; Use cider as clojure backend
-    (require 'cider)
-    (setq org-babel-clojure-backend 'cider)
     ;; Cider configuration
+    (require 'cider)
     (setq nrepl-hide-special-buffers t
           cider-repl-pop-to-buffer-on-connect nil
           cider-popup-stacktraces nil
@@ -394,19 +410,37 @@ layers configuration."
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
+ '(custom-safe-themes
+   (quote
+    ("2718ddd12fd4fbe5e8cbe965b53228e303a1a3ee2817037ff2e54b66b598fc72" "c18172c869f8ad26927f43b558606298b249aa5b2512537faf3290327a87fbf0" "695299c113f708f3db2476158eb02e94e55daa836c72febf5307d04257f30616" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" default)))
  '(expand-region-reset-fast-key "r")
  '(fci-rule-color "#F0F0F0" t)
  '(org-agenda-window-setup (quote current-window))
  '(preview-auto-cache-preamble (quote ask))
- '(ring-bell-function (quote ignore) t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(mode-line ((t (:background "#9D9D9D" :foreground "#080808" :box (:line-width 1 :style released-button) :height 1.0))))
- '(mode-line-inactive ((t (:background "#3C3C3C" :foreground "#0E0E0E" :box (:line-width 1 :style released-button) :height 1.0))))
- '(org-block-background ((t (:background "#161616" :height 0.9))))
- '(org-meta-line ((t (:foreground "#9D9D9D" :height 0.9)))))
+ '(ring-bell-function (quote ignore) t)
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#f36c60")
+     (40 . "#ff9800")
+     (60 . "#fff59d")
+     (80 . "#8bc34a")
+     (100 . "#81d4fa")
+     (120 . "#4dd0e1")
+     (140 . "#b39ddb")
+     (160 . "#f36c60")
+     (180 . "#ff9800")
+     (200 . "#fff59d")
+     (220 . "#8bc34a")
+     (240 . "#81d4fa")
+     (260 . "#4dd0e1")
+     (280 . "#b39ddb")
+     (300 . "#f36c60")
+     (320 . "#ff9800")
+     (340 . "#fff59d")
+     (360 . "#8bc34a"))))
+ '(vc-annotate-very-old-color nil))
