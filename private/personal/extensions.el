@@ -16,17 +16,17 @@
     )
   "List of all extensions to load before the packages.")
 
-(defvar personal-post-extensions
-  '(
-    ;; post extension personals go here
-    )
-  "List of all extensions to load after the packages.")
+;; (setq personal-post-extensions
+;;   '(ox-confluence))
 
 ;; For each extension, define a function personal/init-<extension-personal>
 ;;
-;; (defun personal/init-my-extension ()
-;;   "Initialize my extension"
-;;   )
+;; (defun personal/init-ox-confluence ()
+;;   (use-package ox-confluence
+;;     :defer t
+;;     :init
+;;     (progn
+;;       (eval-after-load 'org '(require 'ox-confluence)))))
 ;;
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:

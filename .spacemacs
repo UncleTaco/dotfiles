@@ -16,42 +16,47 @@
      ;; Example of useful layers you may want to use right away
      ;; Uncomment a layer name and press C-c C-c to install it
      ;; --------------------------------------------------------
+     agenda
      auto-completion
      better-defaults
      clojure
+     csharp
      colors
      emacs-lisp
      git
      github
      ;;ipython-notebook
+     haskell
      latex
      javascript
      ;;markdown
      org
-     org-jira
+     ;;org-jira
      osx
-     personal
+     ;;personal
      ;;prose
      ;;python
+     react
      ;;slime
      syntax-checking
-     themes-megapack
-     ;;ruby
-     ;;vagrant
+     ;;themes-megapack
+     ruby
+     vagrant
      version-control
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(
-                                    hemisu-theme
                                     )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'
    dotspacemacs-delete-orphan-packages t)
   (setq dotspacemacs-additional-packages '(
-                                           color-theme-approximate
+                                           tao-theme
+                                           minimal-theme
                                            olivetti
-                                           org-wc)))
+                                           visual-fill-column
+                                           )))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -81,18 +86,17 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         hemisu-dark
-                         hemisu-light
+                         tao-yin
+                         tao-yang
                          )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 14
-                               :weight normal
-                               :width normal
-                               :powerline-scale 1.3
+   dotspacemacs-default-font '("Input Mono"
+                               :size 13
+                               :weight Normal
+                               :powerline-scale 1.0
                                )
    ;; The leader key
    dotspacemacs-leader-key "SPC"
@@ -135,7 +139,7 @@ before layers configuration."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'.
-   dotspacemacs-inactive-transparency 90
+   dotspacemacs-inactive-transparency 50
    ;; If non nil unicode symbols are displayed in the mode line.
    dotspacemacs-mode-line-unicode-symbols t
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
@@ -150,33 +154,53 @@ before layers configuration."
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
-   ;; specified with an installed package.
-   ;; Not used for now.
+   ;; specified with an installed package. Not used for now.
    dotspacemacs-default-package-repository nil
    )
+  (load "server")
+  (unless (server-running-p) (server-start))
   ;; magit status fullscreen
   (setq-default git-magit-status-fullscreen t)
   ;; User initialization goes here
-  (setq tab-width 2
-        indent-tabs-mode nil)
+  (setq tab-width 2 indent-tabs-mode nil)
   ;; Whitespace settings
   (setq whitespace-action '(auto-cleanup))
-  (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
+  (setq whitespace-style '(trailing space-before-tab indentation
+                                    empty space-after-tab))
 
-  ;; testing theme
-  (add-to-list 'load-path "~/Repositories/hemisu-theme")
-  (load "hemisu-light-theme")
-  (load "hemisu-dark-theme")
-  (load "hemisu-theme.el")
-  (require 'hemisu-theme)
-
-
-  (defun dotspacemacs/config ()
+  (defun my/frame-toggle (frame)
+    "Custom behaviour for new frames"
+    (with-selected-frame frame
+      (unless (display-graphic-p)
+        (set-background-color nil))))
+  (my/frame-toggle (selected-frame))
+  (load-file "~/.emacs.d/private/personal/org-helpers.el")
+  (defun dotspacemacs/user-config ()
     "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-    (if (not (display-graphic-p)) (set-background-color nil)())
-    (color-theme-approximate-on)
+    ;; omnisharp server stuff
+    ;; tramp
+    ;; Functions
+    (defun my/buffer-face-mode-fixed ()
+      "Sets the olivetti font to a light version"
+      (interactive)
+      (setq buffer-face-mode-face '(:weight Light))
+      (buffer-face-mode))
+
+    (defun my/fill-or-unfill-paragraph (&optional unfill region)
+      "Fill paragraph (or REGION).
+  With the prefix argument UNFILL, unfill it instead."
+      (interactive (progn
+                     (barf-if-buffer-read-only)
+                     (list (if current-prefix-arg 'unfill) t)))
+      (let ((fill-column (if unfill (point-max) fill-column)))
+        (fill-paragraph nil region)))
+    (bind-key "M-q" 'my/fill-or-unfill-paragraph)
+    ;; spacemacs-theme stuff
+    ;; moe-theme stuff
+    ;; Show highlighted buffer id as decoration
+    ;; Resize titles
     ;; IPython settings
     (setq ein:use-auto-complete t)
     (setq ein:use-smartrep t)
@@ -186,36 +210,29 @@ layers configuration."
       (interactive)
       (cond ((bound-and-true-p olivetti-mode)
              (olivetti-toggle-hide-modeline)
-             (setq line-spacing nil)
              (text-scale-set 0)
              (menu-bar-mode 1)
              (hl-line-mode 1)
              (olivetti-mode -1)
              (widen)
-             (toggle-frame-fullscreen))
+             )
             (t
-             (toggle-frame-fullscreen)
              (outline-mark-subtree)
              (deactivate-mark)
              (hl-line-mode -1)
              (narrow-to-region (region-beginning)(region-end))
              (text-scale-set 1)
-             (setq line-spacing 0.5)
              (olivetti-mode 1)
              (olivetti-toggle-hide-modeline)
              (menu-bar-mode -1))))
     (evil-leader/set-key "tW" 'my/toggle-writing-mode)
-    ;; better powerline
-    (setq powerline-default-separator 'arrow)
     (add-hook 'doc-view-mode-hook 'auto-revert-mode)
-    (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (setq fill-column 64)
-                (setq visual-line-mode nil)
-                (turn-on-auto-fill)))
 
     ;; Org-Settings
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (set-fill-column 72)))
+    (add-hook 'olivetti-mode-hook 'my/buffer-face-mode-fixed)
     (setq org-directory "~/org/")
     (setq org-agenda-files '("~/org/"
                              "~/org/gtd"
@@ -227,8 +244,7 @@ layers configuration."
     ;; active Babel languages
     (org-babel-do-load-languages
      'org-babel-load-languages
-     '((R . t)
-       (clojure . t)
+     '((clojure . t)
        (dot . t)
        (haskell . t)
        (java . t)
@@ -239,21 +255,6 @@ layers configuration."
        (emacs-lisp . t)
        (C . t)
        ))
-    ;; Use cider as clojure backend
-    (setq org-babel-clojure-backend 'cider)
-    ;; Let's have pretty source code blocks
-    (setq org-edit-src-content-indentation 2
-          org-src-tab-acts-natively t
-          org-src-fontify-natively t
-          org-confirm-babel-evaluate nil)
-
-    ;; Cider configuration
-    (require 'cider)
-    (setq nrepl-hide-special-buffers t
-          cider-repl-pop-to-buffer-on-connect nil
-          cider-popup-stacktraces nil
-          cider-repl-popup-stacktraces t)
-
     ;; org variables
     (setq org-startup-indented t)
     (setq org-hide-leading-stars t)
@@ -264,7 +265,8 @@ layers configuration."
     (setq org-clock-persist 'history)
     (setq org-tags-column 2)
     (setq org-indent-mode-t)
-    (setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
+    (setq org-blank-before-new-entry '((heading .
+                                                nil) (plain-list-item . nil)))
     (setq  org-clock-idle-time 10)
     ;; org-clocking
     (org-clock-persistence-insinuate)
@@ -290,7 +292,6 @@ layers configuration."
     (setq org-agenda-start-on-weekday nil)
     (setq org-reverse-note-order t)
     (global-auto-revert-mode t)
-    (add-to-list 'load-path "~/.emacs.d/private/personal/")
     (setq org-stuck-projects (quote ("" nil nil "")))
     (require 'org-helpers)
 
@@ -319,12 +320,11 @@ layers configuration."
       (org-defkey org-agenda-mode-map "I" 'org-clock-in)
       (org-defkey org-agenda-mode-map "O" 'org-clock-out)
       )
-    (org-babel-load-file "~/.emacs.d/private/personal/Org-Settings.org")
 
     (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
 
     (setq org-clock-continuously t)
-    (setq org-bullets-bullet-list '("⬜" "✕" "◯" "▷"))
+    ;;(setq org-bullets-bullet-list '("⬜" "✕" "◯" "▷"))
     (setq org-agenda-custom-commands
           '(("a" "Agenda"
              ((agenda "" nil)
@@ -396,7 +396,22 @@ layers configuration."
               (org-tags-match-list-sublevels 'indented)))
             ("w" "Waiting Tasks" tags-todo "-CANCELLED/!WAITING|HOLD"
              ((org-agenda-overriding-header "Waiting and Postponed Tasks")
-              (org-agenda-skip-function '(oh/agenda-skip :subtree-if '(project habit)))))))))
+              (org-agenda-skip-function '(oh/agenda-skip :subtree-if '(project habit)))))))
+    ;; Use cider as clojure backend
+    (setq org-babel-clojure-backend 'cider)
+    ;; Let's have pretty source code blocks
+    (setq org-edit-src-content-indentation 0
+          org-src-tab-acts-natively t
+          org-src-fontify-natively t
+          org-confirm-babel-evaluate nil)
+
+    ;; Cider configuration
+    (setq clojure-defun-style-default-indent t)
+    (require 'cider)
+    (setq nrepl-hide-special-buffers t
+          cider-repl-pop-to-buffer-on-connect nil
+          cider-popup-stacktraces nil
+          cider-repl-popup-stacktraces t)))
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
@@ -419,7 +434,6 @@ layers configuration."
     ("2718ddd12fd4fbe5e8cbe965b53228e303a1a3ee2817037ff2e54b66b598fc72" "c18172c869f8ad26927f43b558606298b249aa5b2512537faf3290327a87fbf0" "695299c113f708f3db2476158eb02e94e55daa836c72febf5307d04257f30616" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" default)))
  '(expand-region-reset-fast-key "r")
  '(fci-rule-color "#F0F0F0" t)
- '(org-agenda-window-setup (quote current-window))
  '(preview-auto-cache-preamble (quote ask))
  '(ring-bell-function (quote ignore) t)
  '(vc-annotate-background nil)

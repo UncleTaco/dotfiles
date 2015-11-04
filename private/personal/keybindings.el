@@ -1,4 +1,3 @@
-
 ;; Org-mode keybindings
 (evil-leader/set-key "oo" 'open-org-dir)
 (evil-leader/set-key "oa" 'org-agenda)
