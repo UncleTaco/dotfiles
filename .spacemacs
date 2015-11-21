@@ -157,8 +157,6 @@ before layers configuration."
    ;; specified with an installed package. Not used for now.
    dotspacemacs-default-package-repository nil
    )
-  (load "server")
-  (unless (server-running-p) (server-start))
   ;; magit status fullscreen
   (setq-default git-magit-status-fullscreen t)
   ;; User initialization goes here
@@ -179,6 +177,10 @@ before layers configuration."
     "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+    ;; server shit
+    (require 'server)
+    (and (>= emacs-major-version 24)
+	(defun server-ensure-safe-dir (dir) "Noop" t))
     ;; omnisharp server stuff
     ;; tramp
     ;; Functions

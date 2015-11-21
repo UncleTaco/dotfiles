@@ -9,9 +9,7 @@
         ("g" "Groceries" entry (file+headline "~/org/groceries.org" "INBOX")
          "* %?\n %i\n %a")
         ("j" "Journal Entry" entry (file+datetree "~/org/journal.org")
-         "* %?\nEntered on %U\n %i\n %a")
-        )
-      )
+         "* %?\nEntered on %U\n %i\n %a")))
 
 ;; Quick searches in org mode
 ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
