@@ -7,7 +7,7 @@
   (setq-default                         ;
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
@@ -16,33 +16,30 @@
      ;; Example of useful layers you may want to use right away
      ;; Uncomment a layer name and press C-c C-c to install it
      ;; --------------------------------------------------------
-     agenda
+     ;;agenda
      auto-completion
      better-defaults
      clojure
-     csharp
-     colors
      emacs-lisp
      git
      github
      ;;ipython-notebook
-     haskell
-     latex
-     javascript
+     java
      ;;markdown
      org
      ;;org-jira
-     osx
+     ;;osx
      ;;personal
      ;;prose
      ;;python
-     react
+     ;;react
      ;;slime
      syntax-checking
      ;;themes-megapack
      ruby
-     vagrant
+     ;;vagrant
      version-control
+     my-org
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(
@@ -52,9 +49,9 @@
    ;; the list `dotspacemacs-configuration-layers'
    dotspacemacs-delete-orphan-packages t)
   (setq dotspacemacs-additional-packages '(
-                                           tao-theme
                                            minimal-theme
                                            olivetti
+                                           tao-theme
                                            visual-fill-column
                                            )))
 
@@ -86,16 +83,17 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         tao-yin
-                         tao-yang
+                         minimal-light
+                         minimal
                          )
+
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Input Mono"
+   dotspacemacs-default-font '("InputMono"
                                :size 13
-                               :weight Normal
+                               :weight Regular
                                :powerline-scale 1.0
                                )
    ;; The leader key
@@ -141,6 +139,7 @@ before layers configuration."
    ;; Transparency can be toggled through `toggle-transparency'.
    dotspacemacs-inactive-transparency 50
    ;; If non nil unicode symbols are displayed in the mode line.
+
    dotspacemacs-mode-line-unicode-symbols t
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
@@ -160,18 +159,6 @@ before layers configuration."
   ;; magit status fullscreen
   (setq-default git-magit-status-fullscreen t)
   ;; User initialization goes here
-  (setq tab-width 2 indent-tabs-mode nil)
-  ;; Whitespace settings
-  (setq whitespace-action '(auto-cleanup))
-  (setq whitespace-style '(trailing space-before-tab indentation
-                                    empty space-after-tab))
-
-  (defun my/frame-toggle (frame)
-    "Custom behaviour for new frames"
-    (with-selected-frame frame
-      (unless (display-graphic-p)
-        (set-background-color nil))))
-  (my/frame-toggle (selected-frame))
   (load-file "~/.emacs.d/private/personal/org-helpers.el")
   (defun dotspacemacs/user-config ()
     "Configuration function.
@@ -180,9 +167,34 @@ layers configuration."
     ;; server shit
     (require 'server)
     (and (>= emacs-major-version 24)
-	(defun server-ensure-safe-dir (dir) "Noop" t))
+         (defun server-ensure-safe-dir (dir) "Noop" t))
     ;; omnisharp server stuff
-    ;; tramp
+    (setq tab-width 2 indent-tabs-mode nil)
+    ;; Whitespace settings
+    (setq whitespace-action '(auto-cleanup))
+    (setq whitespace-style '(trailing space-before-tab indentation
+                                      empty space-after-tab))
+
+    (defun my/frame-toggle (frame)
+      "Custom behaviour for new frames"
+      (with-selected-frame frame
+        (unless (display-graphic-p)
+          (set-background-color nil))))
+    (my/frame-toggle (selected-frame))
+    ;; Fix indentation for anonymous classes
+    (c-set-offset 'substatement-open 0)
+    (if (assoc 'inexpr-class c-offsets-alist)
+        (c-set-offset 'inexpr-class 0))
+    ;; eclim for my evim
+    (defun my/eclim-setup ()
+      (message "starting eclim setup")
+      (setq
+       eclim-eclipse-dirs '("~/eclipse")
+       eclim-executable (expand-file-name "~/eclipse/eclim")
+       eclim-auto-save nil)
+      (global-eclim-mode)
+      (message "... finished setup"))
+    (my/eclim-setup)
     ;; Functions
     (defun my/buffer-face-mode-fixed ()
       "Sets the olivetti font to a light version"
@@ -200,7 +212,8 @@ layers configuration."
         (fill-paragraph nil region)))
     (bind-key "M-q" 'my/fill-or-unfill-paragraph)
     ;; spacemacs-theme stuff
-    ;; moe-theme stuff
+    ;; debug stuff
+    (setq debug-on-error t)
     ;; Show highlighted buffer id as decoration
     ;; Resize titles
     ;; IPython settings
@@ -230,34 +243,40 @@ layers configuration."
     (evil-leader/set-key "tW" 'my/toggle-writing-mode)
     (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
-    ;; Org-Settings
+    ;; org-trello syncing
+
     (add-hook 'org-mode-hook
               (lambda ()
                 (set-fill-column 72)))
-    (add-hook 'olivetti-mode-hook 'my/buffer-face-mode-fixed)
-    (setq org-directory "~/org/")
-    (setq org-agenda-files '("~/org/"
-                             "~/org/gtd"
-                             "~/org/notes"
-                             "~/org/.org-jira"
-                             "~/org/writing/project1"
-                             ))
-    (require 'org-habit)
+    (setq org-directory "~/org")
+    (setq org-agenda-files (directory-files org-directory 'absolute-names ".org$" 'nosort))
+    (setq org-startup-indented t)
+    (setq org-log-done 'time)
+    (setq org-default-notes-file (concat org-directory "/notes.org"))
+    (setq org-export-with-toc t)
+    (setq org-export-headline-levels 4)
+    ;; metadata tags for the task at end
+    (setq org-tag-alist '(("clojure"  . ?c)
+                          ("dev"      . ?d)
+                          ("java"     . ?j)
+                          ("TOC"      . ?T)))
+    ;; keyword sequence for org-mode
+    (setq org-todo-keywords
+          '(sequence "TODO(t)" "NEXT(n!)" "PENDING(p)" "|" "DONE(d!)" "STAGED(s)" "DELEGATED(e)" "CANCELLED(c)"))
+    (setq org-fontify-done-headline t)
     ;; active Babel languages
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((clojure . t)
        (dot . t)
-       (haskell . t)
        (java . t)
        (js . t)
        (latex . t)
-       (ruby . t)
        (sh . t)
-       (emacs-lisp . t)
-       (C . t)
-       ))
+       (emacs-lisp . t)))
+
     ;; org variables
+    (require 'org-habit)
     (setq org-startup-indented t)
     (setq org-hide-leading-stars t)
     (setq org-odd-level-only nil)
@@ -297,36 +316,25 @@ layers configuration."
     (setq org-stuck-projects (quote ("" nil nil "")))
     (require 'org-helpers)
 
-    (setq org-todo-keywords
-          (quote ((sequence "TODO(t)"  "NEXT(n!)" "APPT(a)" "|" "DONE(d!)")
-                  (sequence "REPEAT(r)"  "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@)" )
-                  (sequence "IDEA(i)" "MAYBE(y)" "STAGED(s!)" "WORKING(k!)" "|" "USED(u!/@)")
-                  )))
-
-
-    (setq org-todo-state-tags-triggers
-          (quote (("CANCELLED" ("CANCELLED" . t))
-                  ("WAITING" ("WAITING" . t))
-                  ("HOLD" ("WAITING") ("HOLD" . t))
-                  (done ("WAITING") ("HOLD"))
-                  ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-                  ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-                  ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-
-
     (defun custom-org-agenda-mode-defaults ()
       (org-defkey org-agenda-mode-map "W" 'oh/agenda-remove-restriction)
       (org-defkey org-agenda-mode-map "N" 'oh/agenda-restrict-to-subtree)
       (org-defkey org-agenda-mode-map "P" 'oh/agenda-restrict-to-project)
       (org-defkey org-agenda-mode-map "q" 'bury-buffer)
       (org-defkey org-agenda-mode-map "I" 'org-clock-in)
-      (org-defkey org-agenda-mode-map "O" 'org-clock-out)
-      )
+      (org-defkey org-agenda-mode-map "O" 'org-clock-out))
 
     (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
-
+    (setq org-todo-state-tags-triggers
+          (quote (("CANCELLED" ("CANCELLED" . t))
+                  ("PENDING" ("PENDING" . t))
+                  ("HOLD" ("PENDING") ("STAGED" . t))
+                  (done ("PENDING") ("STAGED"))
+                  ("TODO" ("PENDING") ("CANCELLED") ("STAGED"))
+                  ("NEXT" ("PENDING") ("CANCELLED") ("STAGED"))
+                  ("DONE" ("PENDING") ("CANCELLED") ("STAGED")))))
     (setq org-clock-continuously t)
-    ;;(setq org-bullets-bullet-list '("⬜" "✕" "◯" "▷"))
+    (setq org-bullets-bullet-list '("⬜" "✕" "◯" "▷"))
     (setq org-agenda-custom-commands
           '(("a" "Agenda"
              ((agenda "" nil)
@@ -335,20 +343,20 @@ layers configuration."
                         (org-agenda-files '("~/org/inbox.org"))
                         (org-agenda-skip-function
                          '(oh/agenda-skip :headline-if-restricted-and '(todo)))))
-              (tags-todo "-CANCELLED/!-HOLD-WAITING"
+              (tags-todo "-CANCELLED/!-PENDING"
                          ((org-agenda-overriding-header "Stuck Projects")
                           (org-agenda-skip-function
                            '(oh/agenda-skip :subtree-if
                                             '(inactive non-project
                                                        non-stuck-project habit scheduled
                                                        deadline)))))
-              (tags-todo "-WAITING-CANCELLED/!NEXT"
+              (tags-todo "-PENDING-CANCELLED/!NEXT"
                          ((org-agenda-overriding-header "Next Tasks")
                           (org-agenda-skip-function
                            '(oh/agenda-skip :subtree-if '(inactive project habit scheduled deadline)))
                           (org-tags-match-list-sublevels t)
                           (org-agenda-sorting-strategy '(todo-state-down effort-up category-keep))))
-              (tags-todo "-CANCELLED/!-NEXT-HOLD-WAITING"
+              (tags-todo "-CANCELLED/!-NEXT-PENDING"
                          ((org-agenda-overriding-header "Available Tasks")
                           (org-agenda-skip-function
                            '(oh/agenda-skip :headline-if '(project)
@@ -363,7 +371,7 @@ layers configuration."
                                             :headline-if-unrestricted-and '(subproject)
                                             :headline-if-restricted-and '(top-project)))
                           (org-agenda-sorting-strategy '(category-keep))))
-              (tags-todo "-CANCELLED/!WAITING|HOLD"
+              (tags-todo "-CANCELLED/!PENDING"
                          ((org-agenda-overriding-header "Waiting and Postponed Tasks")
                           (org-agenda-skip-function
                            '(oh/agenda-skip :subtree-if '(project habit))))))
@@ -371,18 +379,18 @@ layers configuration."
             ("r" "Tasks to Refile" alltodo ""
              ((org-agenda-overriding-header "Tasks to Refile")
               (org-agenda-files '("~/org/inbox.org"))))
-            ("#" "Stuck Projects" tags-todo "-CANCELLED/!-HOLD-WAITING"
+            ("#" "Stuck Projects" tags-todo "-CANCELLED/!-PENDING"
              ((org-agenda-overriding-header "Stuck Projects")
               (org-agenda-skip-function
                '(oh/agenda-skip :subtree-if '(inactive non-project non-stuck-project
                                                        habit scheduled deadline)))))
-            ("n" "Next Tasks" tags-todo "-WAITING-CANCELLED/!NEXT"
+            ("n" "Next Tasks" tags-todo "-PENDING-CANCELLED/!NEXT"
              ((org-agenda-overriding-header "Next Tasks")
               (org-agenda-skip-function
                '(oh/agenda-skip :subtree-if '(inactive project habit scheduled deadline)))
               (org-tags-match-list-sublevels t)
               (org-agenda-sorting-strategy '(todo-state-down effort-up category-keep))))
-            ("R" "Tasks" tags-todo "-CANCELLED/!-NEXT-HOLD-WAITING"
+            ("R" "Tasks" tags-todo "-CANCELLED/!-NEXT-PENDING"
              ((org-agenda-overriding-header "Available Tasks")
               (org-agenda-skip-function
                '(oh/agenda-skip :headline-if '(project)
@@ -396,9 +404,17 @@ layers configuration."
                '(oh/agenda-skip :subtree-if '(non-project inactive habit)))
               (org-agenda-sorting-strategy '(category-keep))
               (org-tags-match-list-sublevels 'indented)))
-            ("w" "Waiting Tasks" tags-todo "-CANCELLED/!WAITING|HOLD"
+            ("w" "Waiting Tasks" tags-todo "-CANCELLED/!PENDING"
              ((org-agenda-overriding-header "Waiting and Postponed Tasks")
               (org-agenda-skip-function '(oh/agenda-skip :subtree-if '(project habit)))))))
+    (setq org-capture-templates
+          '(("i" "Inbox" entry (file "~/org/inbox.org")
+             "** TODO %?\n %i\n %a")
+            ("w" "Work Tasks" entry (file+headline "~/org/work.org" "Refile")
+             "* TODO %?\n %i\n %a")
+            ("h" "Home Tasks" entry (file+headline "~/org/home.org" "Refile")
+             "* TODO %?\n %i\n %a")))
+
     ;; Use cider as clojure backend
     (setq org-babel-clojure-backend 'cider)
     ;; Let's have pretty source code blocks
@@ -406,10 +422,32 @@ layers configuration."
           org-src-tab-acts-natively t
           org-src-fontify-natively t
           org-confirm-babel-evaluate nil)
+    ;; IMAP, gmail:
+    (setq gnus-secondary-select-methods
+          '((nnimap "gmail" (nnimap-address "imap.gmail.com")
+                    (nnimap-server-port 993)
+                    (nnimap-stream ssl))))
+
+    ;; Send email via gmail:
+    (setq message-send-mail-function 'smtpmail-send-it
+          smtpmail-default-smtp-server "smtp.gmail.com")
+    ;; Archive outgoing email in Sent folder
+    (setq gnus-message-archive-method '(nnimap "imap.gmail.com")
+          gnus-message-archive-group "[Gmail]/Sent Mail")
+
+    ;; Set return email address based on incoming mail address
+    (setq gnus-posting-styles
+          '(((header "to" "elais.jackson@mcleodsoftware.com")
+             (address "elais.jackson@mcleodsoftware.com"))
+            ((header "to" "elais.player@gmail.com"))))
+
+    ;; store email in ~/gmail directory
+    (setq nnml-directory "~/gmail")
+    (setq message-directory "~/gmail")
+    ;; Org-Settings
 
     ;; Cider configuration
     (setq clojure-defun-style-default-indent t)
-    (require 'cider)
     (setq nrepl-hide-special-buffers t
           cider-repl-pop-to-buffer-on-connect nil
           cider-popup-stacktraces nil
@@ -422,11 +460,11 @@ layers configuration."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(TeX-engine (quote xetex))
- '(ahs-case-fold-search nil)
- '(ahs-default-range (quote ahs-range-whole-buffer))
- '(ahs-idle-interval 0.25)
+ '(ahs-case-fold-search nil t)
+ '(ahs-default-range (quote ahs-range-whole-buffer) t)
+ '(ahs-idle-interval 0.25 t)
  '(ahs-idle-timer 0 t)
- '(ahs-inhibit-face-list nil)
+ '(ahs-inhibit-face-list nil t)
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
@@ -437,7 +475,7 @@ layers configuration."
  '(expand-region-reset-fast-key "r")
  '(fci-rule-color "#F0F0F0" t)
  '(preview-auto-cache-preamble (quote ask))
- '(ring-bell-function (quote ignore) t)
+ '(ring-bell-function (quote ignore))
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote
@@ -460,3 +498,9 @@ layers configuration."
      (340 . "#fff59d")
      (360 . "#8bc34a"))))
  '(vc-annotate-very-old-color nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
