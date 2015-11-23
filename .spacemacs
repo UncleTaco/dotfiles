@@ -83,8 +83,8 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         minimal-light
-                         minimal
+                         tao-yin
+                         tao-yang
                          )
 
    ;; If non nil the cursor color matches the state color.
@@ -170,6 +170,7 @@ layers configuration."
          (defun server-ensure-safe-dir (dir) "Noop" t))
     ;; omnisharp server stuff
     (setq tab-width 2 indent-tabs-mode nil)
+
     ;; Whitespace settings
     (setq whitespace-action '(auto-cleanup))
     (setq whitespace-style '(trailing space-before-tab indentation
@@ -194,7 +195,7 @@ layers configuration."
        eclim-auto-save nil)
       (global-eclim-mode)
       (message "... finished setup"))
-    (my/eclim-setup)
+    (add-hook 'java-mode-hook 'my/eclim-setup)
     ;; Functions
     (defun my/buffer-face-mode-fixed ()
       "Sets the olivetti font to a light version"
@@ -243,13 +244,33 @@ layers configuration."
     (evil-leader/set-key "tW" 'my/toggle-writing-mode)
     (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
-    ;; org-trello syncing
+    ;; Quick searches in org mode
+    ;; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+    (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                     (org-agenda-files :maxlevel . 9))))
+    ;; Use full outline paths for refile targets - we file directly with IDO
+    (setq org-refile-use-outline-path t)
 
+    ;; Targets complete directly with IDO
+    (setq org-outline-path-complete-in-steps nil)
+
+    ;; Allow refile to create parent tasks with confirmation
+    (setq org-refile-allow-creating-parent-nodes (quote confirm))
+
+    ;; org-trello major mode for all . trello files
+    (add-to-list 'auto-mode-alist '("\\.trello$" . org-mode))
+
+    ;; add a hook function to check if this is a trello file, the activate the org-trello-minor mode
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (let ((filename (buffer-file-name (current-buffer))))
+                  (when (and filename (string="trello" (file-name-extension filename)))
+                    (org-trello-mode)))))
     (add-hook 'org-mode-hook
               (lambda ()
                 (set-fill-column 72)))
     (setq org-directory "~/org")
-    (setq org-agenda-files (directory-files org-directory 'absolute-names ".org$" 'nosort))
+    (setq org-agenda-files (directory-files org-directory 'absolute-names ".org$" absolute-names ".trello$" 'nosort))
     (setq org-startup-indented t)
     (setq org-log-done 'time)
     (setq org-default-notes-file (concat org-directory "/notes.org"))
@@ -262,7 +283,7 @@ layers configuration."
                           ("TOC"      . ?T)))
     ;; keyword sequence for org-mode
     (setq org-todo-keywords
-          '(sequence "TODO(t)" "NEXT(n!)" "PENDING(p)" "|" "DONE(d!)" "STAGED(s)" "DELEGATED(e)" "CANCELLED(c)"))
+          '((sequence "TODO(t)" "NEXT(n!)" "PENDING(p)" "|" "DONE(d!)"  "CANCELLED(c)")))
     (setq org-fontify-done-headline t)
     ;; active Babel languages
     (org-babel-do-load-languages
@@ -286,8 +307,8 @@ layers configuration."
     (setq org-clock-persist 'history)
     (setq org-tags-column 2)
     (setq org-indent-mode-t)
-    (setq org-blank-before-new-entry '((heading .
-                                                nil) (plain-list-item . nil)))
+    (setq org-blank-before-new-entry '((heading . nil)
+                                       (plain-list-item . nil)))
     (setq  org-clock-idle-time 10)
     ;; org-clocking
     (org-clock-persistence-insinuate)
@@ -409,10 +430,10 @@ layers configuration."
               (org-agenda-skip-function '(oh/agenda-skip :subtree-if '(project habit)))))))
     (setq org-capture-templates
           '(("i" "Inbox" entry (file "~/org/inbox.org")
-             "** TODO %?\n %i\n %a")
-            ("w" "Work Tasks" entry (file+headline "~/org/work.org" "Refile")
              "* TODO %?\n %i\n %a")
-            ("h" "Home Tasks" entry (file+headline "~/org/home.org" "Refile")
+            ("w" "Work Tasks" entry (file+headline "~/org/gtd/work.org" "Refile")
+             "* TODO %?\n %i\n %a")
+            ("h" "Home Tasks" entry (file+headline "~/org/gtd/private.org" "Refile")
              "* TODO %?\n %i\n %a")))
 
     ;; Use cider as clojure backend
@@ -423,28 +444,6 @@ layers configuration."
           org-src-fontify-natively t
           org-confirm-babel-evaluate nil)
     ;; IMAP, gmail:
-    (setq gnus-secondary-select-methods
-          '((nnimap "gmail" (nnimap-address "imap.gmail.com")
-                    (nnimap-server-port 993)
-                    (nnimap-stream ssl))))
-
-    ;; Send email via gmail:
-    (setq message-send-mail-function 'smtpmail-send-it
-          smtpmail-default-smtp-server "smtp.gmail.com")
-    ;; Archive outgoing email in Sent folder
-    (setq gnus-message-archive-method '(nnimap "imap.gmail.com")
-          gnus-message-archive-group "[Gmail]/Sent Mail")
-
-    ;; Set return email address based on incoming mail address
-    (setq gnus-posting-styles
-          '(((header "to" "elais.jackson@mcleodsoftware.com")
-             (address "elais.jackson@mcleodsoftware.com"))
-            ((header "to" "elais.player@gmail.com"))))
-
-    ;; store email in ~/gmail directory
-    (setq nnml-directory "~/gmail")
-    (setq message-directory "~/gmail")
-    ;; Org-Settings
 
     ;; Cider configuration
     (setq clojure-defun-style-default-indent t)

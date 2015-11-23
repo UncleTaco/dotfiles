@@ -33,16 +33,17 @@
 (defun my-org/init-org-journal ()
   "Initialize org-journal"
   (use-package org-journal
-    :defer t))
+    :defer t
+    :init))
 
 (defun my-org/init-org-trello ()
   "Initialize org-trello"
-  (use package org-trello
+  (use-package org-trello
        :defer t
-       :init
+       :config
        (progn
-         (setq org-trello-files '("~/org/work.org"
-                                  "~/org/home.org")))))
+         (setq org-trello-files '("~/org/gtd/work.org"
+                                  "~/org/gtd/privatehome.org")))))
 ;;
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:
