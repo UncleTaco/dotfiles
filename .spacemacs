@@ -185,6 +185,8 @@ layers configuration."
     (c-set-offset 'substatement-open 0)
     (if (assoc 'inexpr-class c-offsets-alist)
         (c-set-offset 'inexpr-class 0))
+    ;; dash
+    (eval-after-load "dash" '(dash-enable-font-lock))
     ;; eclim for my evim
     (require 'company-emacs-eclim)
     (defun my/eclim-setup ()
