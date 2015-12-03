@@ -33,17 +33,20 @@
 (defun my-org/init-org-journal ()
   "Initialize org-journal"
   (use-package org-journal
-    :defer t
-    :init))
+    :defer t))
 
 (defun my-org/init-org-trello ()
   "Initialize org-trello"
   (use-package org-trello
        :defer t
-       :config
+       :init
        (progn
          (setq org-trello-files '("~/org/gtd/work.org"
-                                  "~/org/gtd/privatehome.org")))))
+                                  "~/org/gtd/private.org")))))
+
+(defun edit-personal-keybindings ()
+  "Edit personal keybindings"
+  (find-file "~/.emacs.d/private/my-org/keybindings.el"))
 ;;
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:

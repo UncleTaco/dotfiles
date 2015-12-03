@@ -51,7 +51,9 @@
   (setq dotspacemacs-additional-packages '(
                                            minimal-theme
                                            olivetti
+                                           org-wunderlist
                                            tao-theme
+                                           toc-org
                                            visual-fill-column
                                            )))
 
@@ -164,13 +166,10 @@ before layers configuration."
     "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-    ;; server shit
-    (require 'server)
-    (and (>= emacs-major-version 24)
-         (defun server-ensure-safe-dir (dir) "Noop" t))
     ;; omnisharp server stuff
     (setq tab-width 2 indent-tabs-mode nil)
 
+    ;; make tao-yang background white instead of gray
     ;; Whitespace settings
     (setq whitespace-action '(auto-cleanup))
     (setq whitespace-style '(trailing space-before-tab indentation
@@ -187,12 +186,14 @@ layers configuration."
     (if (assoc 'inexpr-class c-offsets-alist)
         (c-set-offset 'inexpr-class 0))
     ;; eclim for my evim
+    (require 'company-emacs-eclim)
     (defun my/eclim-setup ()
       (message "starting eclim setup")
       (setq
        eclim-eclipse-dirs '("~/eclipse")
        eclim-executable (expand-file-name "~/eclipse/eclim")
        eclim-auto-save nil)
+      (company-emacs-eclim-setup)
       (global-eclim-mode)
       (message "... finished setup"))
     (add-hook 'java-mode-hook 'my/eclim-setup)
@@ -217,6 +218,12 @@ layers configuration."
     (setq debug-on-error t)
     ;; Show highlighted buffer id as decoration
     ;; Resize titles
+    (setq-default auto-fill-function 'do-auto-fill)
+    ;; elisp indentation
+    (add-hook 'emacs-lisp-mode-hook
+              (lambda ()
+                (set-fill-column 79)))
+
     ;; IPython settings
     (setq ein:use-auto-complete t)
     (setq ein:use-smartrep t)
@@ -245,32 +252,15 @@ layers configuration."
     (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
     ;; Quick searches in org mode
-    ;; Targets include this file and any file contributing to the agenda - up to 9 levels deep
-    (setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                     (org-agenda-files :maxlevel . 9))))
-    ;; Use full outline paths for refile targets - we file directly with IDO
-    (setq org-refile-use-outline-path t)
+    (add-to-list 'auto-mode-alist '("\\.org$\\'" . org-mode))
 
-    ;; Targets complete directly with IDO
-    (setq org-outline-path-complete-in-steps nil)
-
-    ;; Allow refile to create parent tasks with confirmation
-    (setq org-refile-allow-creating-parent-nodes (quote confirm))
-
-    ;; org-trello major mode for all . trello files
-    (add-to-list 'auto-mode-alist '("\\.trello$" . org-mode))
-
-    ;; add a hook function to check if this is a trello file, the activate the org-trello-minor mode
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (let ((filename (buffer-file-name (current-buffer))))
-                  (when (and filename (string="trello" (file-name-extension filename)))
-                    (org-trello-mode)))))
     (add-hook 'org-mode-hook
               (lambda ()
                 (set-fill-column 72)))
-    (setq org-directory "~/org")
-    (setq org-agenda-files (directory-files org-directory 'absolute-names ".org$" absolute-names ".trello$" 'nosort))
+    (setq org-directory "~/org/")
+    (setq org-agenda-files '("~/org/"
+                             "~/org/gtd"
+                             "~/org/notes"))
     (setq org-startup-indented t)
     (setq org-log-done 'time)
     (setq org-default-notes-file (concat org-directory "/notes.org"))
@@ -283,7 +273,19 @@ layers configuration."
                           ("TOC"      . ?T)))
     ;; keyword sequence for org-mode
     (setq org-todo-keywords
-          '((sequence "TODO(t)" "NEXT(n!)" "PENDING(p)" "|" "DONE(d!)"  "CANCELLED(c)")))
+          '((sequence "TODO(t)" "NEXT(n!)" "|" "DONE(d!)")
+            (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"
+              "PHONE" "MEETING")))
+
+    (setq org-todo-state-tags-triggers
+          (quote (("CANCELLED" ("CANCELLED" . t))
+                  ("WAITING" ("WAITING" . t))
+                  ("HOLD" ("WAITING") ("HOLD" . t))
+                  (done ("WAITING") ("HOLD"))
+                  ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                  ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                  ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
     (setq org-fontify-done-headline t)
     ;; active Babel languages
     (org-babel-do-load-languages
@@ -298,8 +300,9 @@ layers configuration."
 
     ;; org variables
     (require 'org-habit)
+    (setq org-src-window-setup 'current-window)
     (setq org-startup-indented t)
-    (setq org-hide-leading-stars t)
+    (setq org-hide-leading-stars nil)
     (setq org-odd-level-only nil)
     (setq org-insert-heading-respect-content nil)
     (setq org-startup-align-all-tables nil)
@@ -326,6 +329,7 @@ layers configuration."
     (setq org-habit-following-days 7)
     (setq org-habit-preceding-days 21)
     ;; org-agenda mode settings.
+    (setq org-agenda-window-setup 'current-window)
     (setq org-agenda-ndays 7)
     (setq org-deadline-warning-days 14)
     (setq org-agenda-show-all-dates t)
@@ -346,14 +350,6 @@ layers configuration."
       (org-defkey org-agenda-mode-map "O" 'org-clock-out))
 
     (add-hook 'org-agenda-mode-hook 'custom-org-agenda-mode-defaults 'append)
-    (setq org-todo-state-tags-triggers
-          (quote (("CANCELLED" ("CANCELLED" . t))
-                  ("PENDING" ("PENDING" . t))
-                  ("HOLD" ("PENDING") ("STAGED" . t))
-                  (done ("PENDING") ("STAGED"))
-                  ("TODO" ("PENDING") ("CANCELLED") ("STAGED"))
-                  ("NEXT" ("PENDING") ("CANCELLED") ("STAGED"))
-                  ("DONE" ("PENDING") ("CANCELLED") ("STAGED")))))
     (setq org-clock-continuously t)
     (setq org-bullets-bullet-list '("⬜" "✕" "◯" "▷"))
     (setq org-agenda-custom-commands
@@ -364,20 +360,20 @@ layers configuration."
                         (org-agenda-files '("~/org/inbox.org"))
                         (org-agenda-skip-function
                          '(oh/agenda-skip :headline-if-restricted-and '(todo)))))
-              (tags-todo "-CANCELLED/!-PENDING"
+              (tags-todo "-CANCELLED/!-WAITING"
                          ((org-agenda-overriding-header "Stuck Projects")
                           (org-agenda-skip-function
                            '(oh/agenda-skip :subtree-if
                                             '(inactive non-project
                                                        non-stuck-project habit scheduled
                                                        deadline)))))
-              (tags-todo "-PENDING-CANCELLED/!NEXT"
+              (tags-todo "-WAITING-CANCELLED/!NEXT"
                          ((org-agenda-overriding-header "Next Tasks")
                           (org-agenda-skip-function
                            '(oh/agenda-skip :subtree-if '(inactive project habit scheduled deadline)))
                           (org-tags-match-list-sublevels t)
                           (org-agenda-sorting-strategy '(todo-state-down effort-up category-keep))))
-              (tags-todo "-CANCELLED/!-NEXT-PENDING"
+              (tags-todo "-CANCELLED/!-NEXT-WAITING"
                          ((org-agenda-overriding-header "Available Tasks")
                           (org-agenda-skip-function
                            '(oh/agenda-skip :headline-if '(project)
@@ -392,7 +388,7 @@ layers configuration."
                                             :headline-if-unrestricted-and '(subproject)
                                             :headline-if-restricted-and '(top-project)))
                           (org-agenda-sorting-strategy '(category-keep))))
-              (tags-todo "-CANCELLED/!PENDING"
+              (tags-todo "-CANCELLED/!WAITING"
                          ((org-agenda-overriding-header "Waiting and Postponed Tasks")
                           (org-agenda-skip-function
                            '(oh/agenda-skip :subtree-if '(project habit))))))
@@ -400,18 +396,18 @@ layers configuration."
             ("r" "Tasks to Refile" alltodo ""
              ((org-agenda-overriding-header "Tasks to Refile")
               (org-agenda-files '("~/org/inbox.org"))))
-            ("#" "Stuck Projects" tags-todo "-CANCELLED/!-PENDING"
+            ("#" "Stuck Projects" tags-todo "-CANCELLED/!-WAITING"
              ((org-agenda-overriding-header "Stuck Projects")
               (org-agenda-skip-function
                '(oh/agenda-skip :subtree-if '(inactive non-project non-stuck-project
                                                        habit scheduled deadline)))))
-            ("n" "Next Tasks" tags-todo "-PENDING-CANCELLED/!NEXT"
+            ("n" "Next Tasks" tags-todo "-WAITING-CANCELLED/!NEXT"
              ((org-agenda-overriding-header "Next Tasks")
               (org-agenda-skip-function
                '(oh/agenda-skip :subtree-if '(inactive project habit scheduled deadline)))
               (org-tags-match-list-sublevels t)
               (org-agenda-sorting-strategy '(todo-state-down effort-up category-keep))))
-            ("R" "Tasks" tags-todo "-CANCELLED/!-NEXT-PENDING"
+            ("R" "Tasks" tags-todo "-CANCELLED/!-NEXT-WAITING"
              ((org-agenda-overriding-header "Available Tasks")
               (org-agenda-skip-function
                '(oh/agenda-skip :headline-if '(project)
@@ -425,16 +421,28 @@ layers configuration."
                '(oh/agenda-skip :subtree-if '(non-project inactive habit)))
               (org-agenda-sorting-strategy '(category-keep))
               (org-tags-match-list-sublevels 'indented)))
-            ("w" "Waiting Tasks" tags-todo "-CANCELLED/!PENDING"
+            ("w" "Waiting Tasks" tags-todo "-CANCELLED/!WAITING"
              ((org-agenda-overriding-header "Waiting and Postponed Tasks")
               (org-agenda-skip-function '(oh/agenda-skip :subtree-if '(project habit)))))))
     (setq org-capture-templates
           '(("i" "Inbox" entry (file "~/org/inbox.org")
              "* TODO %?\n %i\n %a")
-            ("w" "Work Tasks" entry (file+headline "~/org/gtd/work.org" "Refile")
+            ("w" "McLeod Tasks" entry (file+headline "~/org/gtd/mcleod.org" "Refile")
              "* TODO %?\n %i\n %a")
             ("h" "Home Tasks" entry (file+headline "~/org/gtd/private.org" "Refile")
              "* TODO %?\n %i\n %a")))
+
+    ;; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+    (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                     (org-agenda-files :maxlevel . 9))))
+    ;; Use full outline paths for refile targets - we file directly with IDO
+    (setq org-refile-use-outline-path t)
+
+    ;; Targets complete directly with IDO
+    (setq org-outline-path-complete-in-steps nil)
+
+    ;; Allow refile to create parent tasks with confirmation
+    (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
     ;; Use cider as clojure backend
     (setq org-babel-clojure-backend 'cider)
@@ -443,8 +451,13 @@ layers configuration."
           org-src-tab-acts-natively t
           org-src-fontify-natively t
           org-confirm-babel-evaluate nil)
-    ;; IMAP, gmail:
 
+    ;; org wunderlist
+    (require 'org-wunderlist)
+    (setq org-wunderlist-client-id "a4056caecfee66d3e883"
+          org-wunderlist-token "24c195054c92bbdf0fb03951e138ef8a1e78a1ce98741673f538dd39f2fd"
+          org-wunderlist-file "~/org/Wunderlist.org"
+          org-wunderlist-dir "~/org/org-wunderlist/")
     ;; Cider configuration
     (setq clojure-defun-style-default-indent t)
     (setq nrepl-hide-special-buffers t

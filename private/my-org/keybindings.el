@@ -34,11 +34,6 @@
   (interactive)
   (find-file "~/org/notes/")
   )
-(defun groceries ()
-  "Edit grocery list"
-  (interactive)
-  (find-file "~/org/groceries.org")
-  )
 
 (defun my-org-archive-done-tasks ()
   (interactive)
