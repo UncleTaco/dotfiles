@@ -15,6 +15,7 @@
 (setq my-org-packages
       '(
         ;; package names go here
+        olivetti
         org-journal
         org-trello
         ))
@@ -44,9 +45,15 @@
          (setq org-trello-files '("~/org/gtd/work.org"
                                   "~/org/gtd/private.org")))))
 
+(defun my-org/init-olivetti()
+  "Initialize olivetti mode"
+  (use-package olivetti
+    :defer t))
+
 (defun edit-personal-keybindings ()
   "Edit personal keybindings"
-  (find-file "~/.emacs.d/private/my-org/keybindings.el"))
+  (find-file "~/.emacs.d/private/my-org/keybindings.el")
+  (find-file "~/.emacs.d/private/my-org/config.el"))
 ;;
 ;; Often the body of an initialize function uses `use-package'
 ;; For more info on `use-package', see readme:

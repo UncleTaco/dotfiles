@@ -49,6 +49,8 @@
    ;; the list `dotspacemacs-configuration-layers'
    dotspacemacs-delete-orphan-packages t)
   (setq dotspacemacs-additional-packages '(
+                                           dash-functional
+                                           iodine-theme
                                            minimal-theme
                                            olivetti
                                            org-wunderlist
@@ -85,8 +87,8 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         iodine
                          tao-yin
-                         tao-yang
                          )
 
    ;; If non nil the cursor color matches the state color.
@@ -135,7 +137,7 @@ before layers configuration."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'.
-   dotspacemacs-active-transparency 90
+   dotspacemacs-active-transparency 100
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'.
@@ -175,18 +177,10 @@ layers configuration."
     (setq whitespace-style '(trailing space-before-tab indentation
                                       empty space-after-tab))
 
-    (defun my/frame-toggle (frame)
-      "Custom behaviour for new frames"
-      (with-selected-frame frame
-        (unless (display-graphic-p)
-          (set-background-color nil))))
-    (my/frame-toggle (selected-frame))
     ;; Fix indentation for anonymous classes
     (c-set-offset 'substatement-open 0)
     (if (assoc 'inexpr-class c-offsets-alist)
         (c-set-offset 'inexpr-class 0))
-    ;; dash
-    (eval-after-load "dash" '(dash-enable-font-lock))
     ;; eclim for my evim
     (require 'company-emacs-eclim)
     (defun my/eclim-setup ()
@@ -199,6 +193,7 @@ layers configuration."
       (global-eclim-mode)
       (message "... finished setup"))
     (add-hook 'java-mode-hook 'my/eclim-setup)
+
     ;; Functions
     (defun my/buffer-face-mode-fixed ()
       "Sets the olivetti font to a light version"
@@ -226,6 +221,7 @@ layers configuration."
               (lambda ()
                 (set-fill-column 79)))
 
+    ;; tao-theme shenanigands
     ;; IPython settings
     (setq ein:use-auto-complete t)
     (setq ein:use-smartrep t)
@@ -265,6 +261,8 @@ layers configuration."
                              "~/org/notes"))
     (setq org-startup-indented t)
     (setq org-log-done 'time)
+    (setq org-log-into-drawer t)
+    (setq org-log-state-notes-insert-after-drawers nil)
     (setq org-default-notes-file (concat org-directory "/notes.org"))
     (setq org-export-with-toc t)
     (setq org-export-headline-levels 4)
@@ -479,13 +477,6 @@ layers configuration."
  '(ahs-idle-interval 0.25 t)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil t)
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
- '(custom-safe-themes
-   (quote
-    ("2718ddd12fd4fbe5e8cbe965b53228e303a1a3ee2817037ff2e54b66b598fc72" "c18172c869f8ad26927f43b558606298b249aa5b2512537faf3290327a87fbf0" "695299c113f708f3db2476158eb02e94e55daa836c72febf5307d04257f30616" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" default)))
  '(expand-region-reset-fast-key "r")
  '(fci-rule-color "#F0F0F0" t)
  '(preview-auto-cache-preamble (quote ask))
